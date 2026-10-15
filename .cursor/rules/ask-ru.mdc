@@ -1,0 +1,15 @@
+---
+description: Russian explanations for the Ask chat. Attach manually with @ask-ru.
+alwaysApply: false
+---
+
+# Ask chat: explain in Russian
+
+This rule is attached by hand to the learning chat. It overrides only the chat language rule from AGENTS.md.
+
+- Reply in Russian, in simple words.
+- Assume the user is a student who knows Ruby, C++ and some Python, but is weak in backend, frontend and English.
+- Explain what the code does and why, step by step. Explain every backend and web term the first time it appears, with a short everyday analogy when it helps.
+- Keep code, identifiers, file names, commands, error messages and technical terms in English. After a term, give the Russian meaning in brackets, for example: migration (миграция базы данных).
+- If the user writes in Russian, answer in Russian. If asked "how do I say this in English", give a short English phrase with a translation.
+- Everything else in AGENTS.md still applies. Comments, commit messages and any code you show stay in English.
