@@ -198,7 +198,7 @@ Greenfield: create the Rails app, then Devise. No problems/contests/judging yet.
 
 Show markup and styles for core competitive-programming UI. Separate kit page and/or placeholder product screens. No real judging backend.
 
-### [ ] Step 3.1 - Base layout and design tokens
+### [x] Step 3.1 - Base layout and design tokens
 
 **Goal:** Establish shared layout, CSS variables, and typography for the product look.
 
@@ -217,7 +217,7 @@ Show markup and styles for core competitive-programming UI. Separate kit page an
 - Add model schema for contests/problems (M4)
 - Overbuild a design system library
 
-### [ ] Step 3.2 - UI kit gallery page
+### [x] Step 3.2 - UI kit gallery page
 
 **Goal:** A scrollable page showcasing buttons, forms, tables, status badges, and fonts used by core features.
 
@@ -235,7 +235,7 @@ Show markup and styles for core competitive-programming UI. Separate kit page an
 - Pull live data from Judge0
 - Skip this page if only building placeholders (kit page is the milestone format)
 
-### [ ] Step 3.3 - Placeholder core screens
+### [x] Step 3.3 - Placeholder core screens
 
 **Goal:** Screens shaped like the final product, with placeholder/fake data: problem list/show, submit form, contest list/show, scoreboard, profile.
 
@@ -683,9 +683,9 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 | [x] | 5 | 2.1 Rails bootstrap | M2 |
 | [x] | 6 | 2.2 Devise User | M2 |
 | [x] | 7 | 2.3 Auth UI + session | M2 |
-| [ ] | 8 | 3.1 Design tokens | M3 |
-| [ ] | 9 | 3.2 UI kit page | M3 |
-| [ ] | 10 | 3.3 Placeholder screens | M3 |
+| [x] | 8 | 3.1 Design tokens | M3 |
+| [x] | 9 | 3.2 UI kit page | M3 |
+| [x] | 10 | 3.3 Placeholder screens | M3 |
 | [ ] | 11 | 4.1 Migrations | M4 |
 | [ ] | 12 | 4.2 Models | M4 |
 | [ ] | 13 | 4.3 Contests::Scoring | M4 |

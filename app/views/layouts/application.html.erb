@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= content_for(:title) || "ThetaRush" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -18,37 +18,23 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <header class="site-header">
-      <nav class="site-nav">
-        <a class="site-brand" href="<%= root_path %>">ThetaRush</a>
-
-        <div class="site-nav__actions">
-          <% if user_signed_in? %>
-            <span class="site-nav__user"><%= current_user.email %></span>
-            <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "button button--ghost" %>
-          <% else %>
-            <%= link_to "Register", new_user_registration_path, class: "button button--ghost" %>
-            <%= link_to "Log in", new_user_session_path, class: "button" %>
-          <% end %>
-        </div>
-      </nav>
-    </header>
-
-    <% if notice.present? %>
-      <p class="flash flash--notice"><%= notice %></p>
-    <% end %>
-    <% if alert.present? %>
-      <p class="flash flash--alert"><%= alert %></p>
-    <% end %>
+    <%= render "layouts/header" %>
+    <%= render "layouts/flash" %>
 
     <main class="site-main">
       <%= yield %>
     </main>
+
+    <%= render "layouts/footer" %>
   </body>
 </html>

@@ -24,7 +24,7 @@ Show the markup and styles for all interface elements related to the core functi
  
 Format: a separate page where you can scroll through all kinds of buttons, forms and fonts. Alternatively, screens that are already built in the form they will have in the final project, but "with placeholders".
  
-- [ ] UI Kit is ready
+- [x] UI Kit is ready
 ## 4. Models and model tests
  
 **Deadline:** 05.10-09.10

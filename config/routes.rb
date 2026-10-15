@@ -11,6 +11,21 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   get "dashboard", to: "dashboard#show", as: :dashboard
+  get "ui_kit", to: "ui_kit#show", as: :ui_kit
+
+  resources :problems, only: [ :index, :show ] do
+    resources :submissions, only: [ :create ]
+  end
+  resources :submissions, only: [ :show ]
+
+  resources :contests, only: [ :index, :show ] do
+    member do
+      get :scoreboard
+      post :register
+    end
+  end
+
+  resource :profile, only: [ :show ]
 
   # Defines the root path route ("/")
   root "home#index"

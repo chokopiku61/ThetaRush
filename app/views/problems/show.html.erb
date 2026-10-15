@@ -1,0 +1,59 @@
+<% content_for :title, "#{@problem.title} - ThetaRush" %>
+
+<section class="page-header">
+  <h1>
+    <%= @problem.title %>
+    <span class="rating-pill"><%= @problem.rating %></span>
+  </h1>
+  <p class="page-meta">
+    <%= @problem.tags.join(", ") %>
+    · <%= link_to "Back to catalog", problems_path %>
+  </p>
+</section>
+
+<ul class="limits">
+  <li>Time limit: <strong><%= @problem.time_limit_ms %> ms</strong></li>
+  <li>Memory limit: <strong><%= @problem.memory_limit_mb %> MB</strong></li>
+  <li>Solved: <strong><%= @problem.solved_count %></strong></li>
+</ul>
+
+<article class="statement surface">
+  <%= sanitize @problem.statement_html, tags: %w[p code h3 strong em sub sup], attributes: [] %>
+
+  <h3>Samples</h3>
+  <div class="sample-grid">
+    <div>
+      <p><strong>Input</strong></p>
+      <pre class="sample"><%= @problem.sample_input %></pre>
+    </div>
+    <div>
+      <p><strong>Output</strong></p>
+      <pre class="sample"><%= @problem.sample_output %></pre>
+    </div>
+  </div>
+</article>
+
+<section class="submit-panel surface" id="submit">
+  <h2>Submit</h2>
+  <% if user_signed_in? %>
+    <p class="page-meta">Choose a language and paste your solution. Judging is not wired yet.</p>
+    <%= form_with url: problem_submissions_path(@problem.id), method: :post, class: "form", local: true do %>
+      <div class="field">
+        <label for="submission_language">Language</label>
+        <%= select_tag :language, options_for_select(@languages, "python"), id: "submission_language", class: "select" %>
+      </div>
+      <div class="field">
+        <label for="submission_source">Source code</label>
+        <%= text_area_tag :source, "def solve():\n    pass\n", id: "submission_source", class: "textarea textarea--code", rows: 12 %>
+      </div>
+      <div class="actions">
+        <%= submit_tag "Submit", class: "button" %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="alert alert--info">
+      <%= link_to "Sign in", new_user_session_path %> to submit a solution.
+      Guests can still read the statement.
+    </div>
+  <% end %>
+</section>

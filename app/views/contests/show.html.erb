@@ -1,0 +1,46 @@
+<% content_for :title, "#{@contest.title} - ThetaRush" %>
+
+<section class="page-header">
+  <h1><%= @contest.title %></h1>
+  <p class="page-lede"><%= @contest.description %></p>
+  <p class="page-meta">
+    <%= contest_status_label(@contest.status) %>
+    · <%= l(@contest.starts_at, format: :short) rescue @contest.starts_at %>
+    –
+    <%= l(@contest.ends_at, format: :short) rescue @contest.ends_at %>
+  </p>
+</section>
+
+<div class="cluster" style="margin-bottom: var(--space-5)">
+  <% if user_signed_in? %>
+    <%= button_to "Register", register_contest_path(@contest.id), method: :post, class: "button" %>
+  <% else %>
+    <%= link_to "Sign in to register", new_user_session_path, class: "button" %>
+  <% end %>
+  <%= link_to "Scoreboard", scoreboard_contest_path(@contest.id), class: "button button--secondary" %>
+  <%= link_to "All contests", contests_path, class: "button button--ghost" %>
+</div>
+
+<section class="stack">
+  <h2>Problems</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @contest_problems.each do |entry| %>
+          <tr>
+            <td class="num"><%= entry.letter %></td>
+            <td><%= link_to entry.problem.title, problem_path(entry.problem.id) %></td>
+            <td><span class="rating-pill"><%= entry.problem.rating %></span></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

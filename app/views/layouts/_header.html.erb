@@ -1,0 +1,26 @@
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-brand" href="<%= root_path %>">
+      <span class="site-brand__mark">θ</span>ThetaRush
+    </a>
+
+    <div class="site-nav__links">
+      <%= nav_link_to "Problems", problems_path %>
+      <%= nav_link_to "Contests", contests_path %>
+      <% if user_signed_in? %>
+        <%= nav_link_to "Profile", profile_path %>
+      <% end %>
+      <%= nav_link_to "UI kit", ui_kit_path %>
+    </div>
+
+    <div class="site-nav__actions">
+      <% if user_signed_in? %>
+        <span class="site-nav__user"><%= current_user.email %></span>
+        <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "button button--ghost" %>
+      <% else %>
+        <%= link_to "Register", new_user_registration_path, class: "button button--ghost" %>
+        <%= link_to "Log in", new_user_session_path, class: "button" %>
+      <% end %>
+    </div>
+  </nav>
+</header>

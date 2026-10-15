@@ -1,0 +1,46 @@
+<% content_for :title, "Profile - ThetaRush" %>
+
+<section class="page-header">
+  <h1>Profile</h1>
+  <p class="page-lede">Rating and recent activity. Placeholder numbers for UI review.</p>
+</section>
+
+<p class="placeholder-note">Rating math ships in Milestone 4; profile wiring and history in Milestone 5.</p>
+
+<section class="surface profile-header">
+  <div>
+    <h2 class="profile-header__name"><%= @profile.handle %></h2>
+    <p class="profile-header__email"><%= @profile.email %></p>
+    <p class="page-meta">
+      <%= @profile.contests_played %> contests · <%= @profile.problems_solved %> problems solved
+    </p>
+  </div>
+  <div class="rating-block">
+    <div class="rating-block__value"><%= @profile.rating %></div>
+    <p class="rating-block__label">Current rating · max <%= @profile.max_rating %></p>
+  </div>
+</section>
+
+<section class="stack" style="margin-top: var(--space-6)">
+  <h2>Recent submissions</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Problem</th>
+          <th>Verdict</th>
+          <th>When</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @profile.recent_verdicts.each do |row| %>
+          <tr>
+            <td><%= row.problem %></td>
+            <td><%= verdict_badge(row.verdict) %></td>
+            <td class="num"><%= row.when %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
