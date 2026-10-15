@@ -1,0 +1,85 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+config/master.key
+config/credentials/*.key
+
+# Bundler / Ruby
+/.bundle/
+/vendor/bundle/
+/vendor/cache/
+*.gem
+.ruby-gemset
+
+# Rails
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep
+/public/assets
+/public/packs
+/public/packs-test
+/app/assets/builds/*
+!/app/assets/builds/.keep
+/config/local_env.yml
+
+# Node (if asset pipeline adds it later)
+/node_modules/
+/yarn-error.log
+/npm-debug.log*
+/pnpm-debug.log*
+*.tsbuildinfo
+
+# Test / coverage
+/coverage/
+/spec/tmp/
+/test/tmp/
+.rspec_status
+.byebug_history
+.irb_history
+
+# Databases and local dumps
+*.sqlite3
+*.sqlite3-*
+/db/*.sqlite3
+/db/*.sqlite3-*
+*.dump
+/dump/
+/tmp/datasets/
+
+# Judge0 / Docker local volumes (do not commit runtime data)
+/judge0/
+/judge0-data/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Editors / IDEs
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# Cursor local (keep committed project rules under .cursor/rules/)
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# Misc
+*.log
+*.pid
+*.seed
+.cache/
