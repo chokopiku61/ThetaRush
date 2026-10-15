@@ -12,10 +12,10 @@
  
 **Deadline:** 28.09-02.10 (originally due 25.09, extended to 02.10)
  
-- [ ] User model
-- [ ] Login/registration screen
-- [ ] A screen that shows whether you are logged in or not
-- [ ] Session handling (the user is not logged out when the page is refreshed. There is a logout button that ends the session)
+- [x] User model
+- [x] Login/registration screen
+- [x] A screen that shows whether you are logged in or not
+- [x] Session handling (the user is not logged out when the page is refreshed. There is a logout button that ends the session)
 ## 3. UI Kit
  
 **Deadline:** 28.09-02.10

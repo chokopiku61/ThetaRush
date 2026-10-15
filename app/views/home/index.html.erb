@@ -1,0 +1,23 @@
+<% content_for :title, "ThetaRush" %>
+
+<section class="home">
+  <h1>ThetaRush</h1>
+  <p class="home__tagline">Competitive programming: problems, contests, and ratings.</p>
+
+  <% if user_signed_in? %>
+    <div class="session-status session-status--signed-in">
+      <p><strong>You are signed in</strong> as <%= current_user.email %>.</p>
+      <p>Your session persists across page refreshes. Use Log out in the header to end it.</p>
+      <p><%= link_to "Open protected page", dashboard_path %></p>
+    </div>
+  <% else %>
+    <div class="session-status session-status--guest">
+      <p><strong>You are a guest.</strong> Register or log in to start a session.</p>
+      <p>
+        <%= link_to "Register", new_user_registration_path %>
+        or
+        <%= link_to "Log in", new_user_session_path %>
+      </p>
+    </div>
+  <% end %>
+</section>

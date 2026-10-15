@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "ThetaRush" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ThetaRush">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a class="site-brand" href="<%= root_path %>">ThetaRush</a>
+
+        <div class="site-nav__actions">
+          <% if user_signed_in? %>
+            <span class="site-nav__user"><%= current_user.email %></span>
+            <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "button button--ghost" %>
+          <% else %>
+            <%= link_to "Register", new_user_registration_path, class: "button button--ghost" %>
+            <%= link_to "Log in", new_user_session_path, class: "button" %>
+          <% end %>
+        </div>
+      </nav>
+    </header>
+
+    <% if notice.present? %>
+      <p class="flash flash--notice"><%= notice %></p>
+    <% end %>
+    <% if alert.present? %>
+      <p class="flash flash--alert"><%= alert %></p>
+    <% end %>
+
+    <main class="site-main">
+      <%= yield %>
+    </main>
+  </body>
+</html>

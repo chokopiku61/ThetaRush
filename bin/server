@@ -1,0 +1,146 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Manage the local Rails development server in the background.
+#
+# Usage:
+#   bin/server start
+#   bin/server stop
+#   bin/server restart
+#   bin/server status
+#
+# Environment:
+#   PORT     listen port (default: 3000)
+#   BINDING  bind address (default: 127.0.0.1)
+
+require "fileutils"
+
+APP_ROOT = File.expand_path("..", __dir__)
+PID_FILE = File.join(APP_ROOT, "tmp", "pids", "server.pid")
+LOG_FILE = File.join(APP_ROOT, "log", "server.log")
+PORT = ENV.fetch("PORT", "3000")
+BINDING = ENV.fetch("BINDING", "127.0.0.1")
+WINDOWS = Gem.win_platform?
+
+def pid_from_file
+  return nil unless File.exist?(PID_FILE)
+
+  pid = File.read(PID_FILE).to_i
+  pid.positive? ? pid : nil
+end
+
+def process_alive?(pid)
+  Process.kill(0, pid)
+  true
+rescue Errno::ESRCH
+  false
+rescue Errno::EPERM
+  true
+end
+
+def running_pid
+  pid = pid_from_file
+  return nil unless pid
+  return pid if process_alive?(pid)
+
+  File.delete(PID_FILE) if File.exist?(PID_FILE)
+  nil
+end
+
+def start_server
+  if (pid = running_pid)
+    puts "Server already running (pid #{pid}) on #{BINDING}:#{PORT}"
+    return
+  end
+
+  FileUtils.mkdir_p(File.dirname(PID_FILE))
+  FileUtils.mkdir_p(File.dirname(LOG_FILE))
+
+  rails = File.join(APP_ROOT, "bin", "rails")
+  env = {
+    "PIDFILE" => PID_FILE,
+    "PORT" => PORT
+  }
+
+  spawn_options = {
+    chdir: APP_ROOT,
+    out: LOG_FILE,
+    err: [ :child, :out ]
+  }
+  spawn_options[:pgroup] = true unless WINDOWS
+
+  spawn(env, Gem.ruby, rails, "server", "-b", BINDING, "-p", PORT, spawn_options)
+  wait_until_running!
+
+  puts "Server started (pid #{running_pid}) on http://#{BINDING}:#{PORT}/"
+  puts "Logs: #{LOG_FILE}"
+end
+
+def wait_until_running!(timeout: 20)
+  deadline = Time.now + timeout
+  loop do
+    return if running_pid
+    raise "Server failed to start within #{timeout}s. Check #{LOG_FILE}" if Time.now > deadline
+
+    sleep 0.25
+  end
+end
+
+def stop_server
+  pid = running_pid
+  unless pid
+    puts "Server is not running"
+    return
+  end
+
+  if WINDOWS
+    system("taskkill", "/PID", pid.to_s, "/T", "/F", out: File::NULL, err: File::NULL)
+  else
+    begin
+      Process.kill("TERM", pid)
+    rescue Errno::ESRCH
+      # already gone
+    end
+  end
+
+  deadline = Time.now + 10
+  while process_alive?(pid) && Time.now < deadline
+    sleep 0.25
+  end
+
+  if process_alive?(pid)
+    if WINDOWS
+      system("taskkill", "/PID", pid.to_s, "/T", "/F", out: File::NULL, err: File::NULL)
+    else
+      Process.kill("KILL", pid)
+    end
+  end
+
+  File.delete(PID_FILE) if File.exist?(PID_FILE)
+  puts "Server stopped (was pid #{pid})"
+end
+
+def status_server
+  if (pid = running_pid)
+    puts "Server is running (pid #{pid}) on #{BINDING}:#{PORT}"
+    exit 0
+  end
+
+  puts "Server is not running"
+  exit 1
+end
+
+command = ARGV[0].to_s
+FileUtils.chdir(APP_ROOT) do
+  case command
+  when "start" then start_server
+  when "stop" then stop_server
+  when "restart"
+    stop_server
+    start_server
+  when "status" then status_server
+  else
+    warn "Usage: bin/server {start|stop|restart|status}"
+    exit 64
+  end
+end

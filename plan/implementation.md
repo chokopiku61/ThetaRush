@@ -126,7 +126,7 @@ Deadline context: see [milestones.md](milestones.md). Deliverable is documentati
 
 Greenfield: create the Rails app, then Devise. No problems/contests/judging yet.
 
-### [ ] Step 2.1 - Bootstrap Rails application
+### [x] Step 2.1 - Bootstrap Rails application
 
 **Goal:** Create a Rails app in this repo with PostgreSQL and Hotwire defaults (not API-only).
 
@@ -147,7 +147,7 @@ Greenfield: create the Rails app, then Devise. No problems/contests/judging yet.
 - Install gems globally
 - Commit secrets or real credentials
 
-### [ ] Step 2.2 - Devise User model
+### [x] Step 2.2 - Devise User model
 
 **Goal:** Add Devise with a `User` model and run migrations.
 
@@ -168,7 +168,7 @@ Greenfield: create the Rails app, then Devise. No problems/contests/judging yet.
 - Add rating fields beyond a simple nullable `rating` integer if you must; prefer deferring rating columns to M4 if unsure
 - Customize Devise mailer extensively
 
-### [ ] Step 2.3 - Login, registration, session UI
+### [x] Step 2.3 - Login, registration, session UI
 
 **Goal:** Sign up, sign in, sign out; layout shows logged-in vs guest; session survives refresh.
 
@@ -680,9 +680,9 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 | [x] | 2 | 1.2 Screen diagram | M1 |
 | [x] | 3 | 1.3 Stack | M1 |
 | [x] | 4 | 1.4 Pitfalls | M1 |
-| [ ] | 5 | 2.1 Rails bootstrap | M2 |
-| [ ] | 6 | 2.2 Devise User | M2 |
-| [ ] | 7 | 2.3 Auth UI + session | M2 |
+| [x] | 5 | 2.1 Rails bootstrap | M2 |
+| [x] | 6 | 2.2 Devise User | M2 |
+| [x] | 7 | 2.3 Auth UI + session | M2 |
 | [ ] | 8 | 3.1 Design tokens | M3 |
 | [ ] | 9 | 3.2 UI kit page | M3 |
 | [ ] | 10 | 3.3 Placeholder screens | M3 |
