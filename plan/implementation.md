@@ -262,7 +262,7 @@ Show markup and styles for core competitive-programming UI. Separate kit page an
 
 Database schema is mandatory. Models need validations, associations, and business logic. Tests focus on business logic (scoring, rating, submission state). No Judge0/Sidekiq wiring.
 
-### [ ] Step 4.1 - Database schema migrations
+### [x] Step 4.1 - Database schema migrations
 
 **Goal:** Migrations for the architecture data model.
 
@@ -287,7 +287,7 @@ Database schema is mandatory. Models need validations, associations, and busines
 - Call external APIs
 - Put large binary datasets in git
 
-### [ ] Step 4.2 - Models: associations and validations
+### [x] Step 4.2 - Models: associations and validations
 
 **Goal:** ActiveRecord models with associations and validations for core integrity.
 
@@ -686,8 +686,8 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 | [x] | 8 | 3.1 Design tokens | M3 |
 | [x] | 9 | 3.2 UI kit page | M3 |
 | [x] | 10 | 3.3 Placeholder screens | M3 |
-| [ ] | 11 | 4.1 Migrations | M4 |
-| [ ] | 12 | 4.2 Models | M4 |
+| [x] | 11 | 4.1 Migrations | M4 |
+| [x] | 12 | 4.2 Models | M4 |
 | [ ] | 13 | 4.3 Contests::Scoring | M4 |
 | [ ] | 14 | 4.4 Ratings::Calculator | M4 |
 | [ ] | 15 | 4.5 Model tests | M4 |

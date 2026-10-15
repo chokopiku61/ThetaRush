@@ -2,8 +2,14 @@
 
 one:
   email: one@example.com
+  username: one_user
   encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  rating: 1500
+  max_rating: 1500
 
 two:
   email: two@example.com
+  username: two_user
   encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  rating: 1500
+  max_rating: 1500

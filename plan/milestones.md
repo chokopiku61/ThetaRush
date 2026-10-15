@@ -29,7 +29,7 @@ Format: a separate page where you can scroll through all kinds of buttons, forms
  
 **Deadline:** 05.10-09.10
  
-- [ ] Database schema (mandatory at this stage)
+- [x] Database schema (mandatory at this stage)
 - [ ] Migrations + models. Models must include validations, associations and business logic methods
 - [ ] Automated tests for business logic methods (mandatory), for validations and associations (optional). Ideally there should be at least 2-3 test files with 2-3 "contexts" in each
 ## 5. User happy path
