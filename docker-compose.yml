@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: thetarush_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: theta_rush_development
+      # Если хотите, чтобы база создавалась сразу и для тестов:
+      # POSTGRES_MULTIPLE_DATABASES: thetarush_development,thetarush_test
+    ports:
+      - "5433:5432"   # снаружи 5433, внутри контейнера стандартный 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d theta_rush_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - net
+
+  adminer:
+    image: adminer:latest
+    container_name: thetarush_adminer
+    restart: unless-stopped
+    ports:
+      - "8089:8080"          # Adminer будет доступен на http://localhost:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: db # Указываем имя сервиса с БД (не localhost!)
+    depends_on:
+      - db  
+    volumes:
+      - ./.adminer/adminer-dark.css:/var/www/html/adminer.css
+    networks:
+      - net
+
+volumes:
+  pgdata:
+
+networks:
+  net:
+    driver: bridge
