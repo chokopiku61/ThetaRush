@@ -1,0 +1,57 @@
+ru:
+  devise:
+    failure:
+      already_authenticated: "Вы уже вошли."
+      inactive: "Ваш аккаунт ещё не активирован."
+      invalid: "Неверный %{authentication_keys} или пароль."
+      locked: "Ваш аккаунт заблокирован."
+      last_attempt: "У вас осталась одна попытка до блокировки аккаунта."
+      not_found_in_database: "Неверный %{authentication_keys} или пароль."
+      timeout: "Сессия истекла. Войдите снова."
+      unauthenticated: "Войдите или зарегистрируйтесь, чтобы продолжить."
+      unconfirmed: "Подтвердите email, прежде чем продолжить."
+    sessions:
+      signed_in: "Вход выполнен."
+      signed_out: "Вы вышли."
+      already_signed_out: "Вы уже вышли."
+    passwords:
+      send_instructions: "Инструкции по сбросу пароля отправлены на email."
+      updated: "Пароль изменён. Вы вошли в систему."
+      updated_not_active: "Пароль изменён."
+      send_paranoid_instructions: "Если email есть в базе, вы получите ссылку для сброса пароля."
+      no_token: "Нельзя открыть эту страницу без письма со сбросом пароля."
+    registrations:
+      signed_up: "Добро пожаловать! Регистрация прошла успешно."
+      signed_up_but_unconfirmed: "Письмо с подтверждением отправлено на email."
+      updated: "Аккаунт обновлён."
+      update_needs_confirmation: "Аккаунт обновлён, подтвердите новый email."
+      destroyed: "Аккаунт удалён. До встречи!"
+    unlocks:
+      send_instructions: "Инструкции по разблокировке отправлены на email."
+      unlocked: "Аккаунт разблокирован. Войдите снова."
+    confirmations:
+      confirmed: "Email подтверждён."
+      send_instructions: "Инструкции по подтверждению отправлены на email."
+    mailer:
+      confirmation_instructions:
+        subject: "Подтверждение email"
+      reset_password_instructions:
+        subject: "Сброс пароля"
+      unlock_instructions:
+        subject: "Разблокировка аккаунта"
+      email_changed:
+        subject: "Email изменён"
+      password_change:
+        subject: "Пароль изменён"
+  errors:
+    messages:
+      already_confirmed: "уже подтверждён"
+      confirmation_period_expired: "нужно подтвердить в течение %{period}"
+      expired: "срок истёк, запросите снова"
+      not_found: "не найдено"
+      not_locked: "не заблокирован"
+      not_saved:
+        one: "%{count} ошибка не позволяет сохранить %{resource}:"
+        few: "%{count} ошибки не позволяют сохранить %{resource}:"
+        many: "%{count} ошибок не позволяют сохранить %{resource}:"
+        other: "%{count} ошибок не позволяют сохранить %{resource}:"
