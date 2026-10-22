@@ -17,6 +17,13 @@ class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
       stdin: "1 2\n",
       expected_output: "3\n"
     )
+    @contest = Contest.create!(
+      title: "UI Kit Contest",
+      starts_at: 1.hour.ago,
+      ends_at: 1.hour.from_now,
+      status: "running"
+    )
+    ContestProblem.create!(contest: @contest, problem: @problem, position: 1, letter: "A")
   end
 
   test "ui kit page renders core sections" do
@@ -45,11 +52,11 @@ class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".contest-card", minimum: 1
 
-    get contest_path(1)
+    get contest_path(@contest)
     assert_response :success
     assert_select "a", text: /Scoreboard/
 
-    get scoreboard_contest_path(1)
+    get scoreboard_contest_path(@contest)
     assert_response :success
     assert_select ".table"
   end

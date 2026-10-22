@@ -2,10 +2,8 @@
 
 <section class="page-header">
   <h1>Contests</h1>
-  <p class="page-lede">Tournaments and daily sprints. Placeholder list for UI review.</p>
+  <p class="page-lede">Tournaments and daily sprints.</p>
 </section>
-
-<p class="placeholder-note">Fake data only. Contest generation and registration land in a later milestone.</p>
 
 <ul class="card-list">
   <% @contests.each do |contest| %>
@@ -16,9 +14,13 @@
           <%= contest_status_label(contest.status) %>
           · <%= contest.problem_count %> problems
           · <%= contest.registered_count %> registered
-          · <%= l(contest.starts_at, format: :short) rescue contest.starts_at %>
+          · Starts <%= l(contest.starts_at, format: :short) rescue contest.starts_at %>
         </p>
       <% end %>
     </li>
   <% end %>
 </ul>
+
+<% if @contests.empty? %>
+  <p class="empty-state">No contests are available yet.</p>
+<% end %>

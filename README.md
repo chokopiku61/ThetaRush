@@ -14,7 +14,7 @@ Competitive programming site (Rails + Judge0 CE). Supported languages: Python an
 bundle install
 docker compose up -d          # Postgres (5433), Adminer (8089), Redis (6379)
 bin/rails db:prepare
-bin/rails db:seed             # A+B and Hello Name sample problems
+bin/rails db:seed             # Sample problems and a running demo contest
 bin/rails server
 ```
 
@@ -42,6 +42,7 @@ On Docker Desktop (cgroup v2), Judge0 is configured to use isolate with setrlimi
 |---------|-----|
 | App | http://localhost:3000 |
 | Problems | http://localhost:3000/problems |
+| Contests | http://localhost:3000/contests |
 | Sidekiq Web (dev) | http://localhost:3000/sidekiq |
 | Adminer | http://localhost:8089 |
 | Judge0 | http://localhost:2358 |
@@ -59,5 +60,6 @@ bin/rails import:problems
 ## Notes
 
 - Never run contestant code on the host; judging goes through Judge0 isolate.
-- Contests, scoreboard scoring, and live updates are later milestone steps.
+- Contest standings update after each terminal verdict and refresh with the scoreboard page.
+- Live scoreboard updates are planned for Milestone 7.
 - Webhook auth is a shared secret suitable for local Judge0 only.

@@ -464,7 +464,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Add Turbo Streams live updates (M7)
 - Edit expected outputs to force green
 
-### [ ] Step 5.6 - Contests: list, register, show
+### [x] Step 5.6 - Contests: list, register, show
 
 **Goal:** Contests happy path without requiring live generation cron.
 
@@ -482,7 +482,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Require sidekiq-cron for the demo if seeds suffice
 - Build full admin UX before Step 5.9
 
-### [ ] Step 5.7 - Contest scoring on verdict + scoreboard page
+### [x] Step 5.7 - Contest scoring on verdict + scoreboard page
 
 **Goal:** When a contest submission gets a verdict, run `Contests::Scoring`; show scoreboard (manual refresh OK).
 

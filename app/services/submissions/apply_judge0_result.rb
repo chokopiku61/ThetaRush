@@ -3,19 +3,20 @@
 module Submissions
   # Re-fetches Judge0 batch tokens and updates the submission when all tests finish.
   class ApplyJudge0Result
-    def self.call(submission)
-      new(submission).call
+    def self.call(submission, client: Judge0Client.new)
+      new(submission, client: client).call
     end
 
-    def initialize(submission)
+    def initialize(submission, client:)
       @submission = submission
+      @client = client
     end
 
     def call
       tokens = parse_tokens(@submission.judge0_token)
       return @submission if tokens.empty?
 
-      results = Judge0Client.new.fetch_batch(tokens)
+      results = @client.fetch_batch(tokens)
       # Judge0 may return a bare array or { "submissions" => [...] }.
       rows = results.is_a?(Hash) ? Array(results["submissions"]) : Array(results)
       aggregate = Judge0Client.aggregate_results(rows.compact)
@@ -36,6 +37,7 @@ module Submissions
       end
 
       @submission.update!(attrs.compact)
+      apply_contest_scoring if terminal_status?(@submission.status)
       @submission
     end
 
@@ -48,6 +50,14 @@ module Submissions
       Array(parsed).map(&:to_s)
     rescue JSON::ParserError
       raw.to_s.split(",").map(&:strip).reject(&:blank?)
+    end
+
+    def terminal_status?(status)
+      Submission::STATUSES.include?(status) && !%w[queued judging].include?(status)
+    end
+
+    def apply_contest_scoring
+      Contests::Scoring.apply!(@submission) if @submission.contest_id?
     end
   end
 end

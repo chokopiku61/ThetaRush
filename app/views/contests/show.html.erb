@@ -6,16 +6,20 @@
   <p class="page-meta">
     <%= contest_status_label(@contest.status) %>
     · <%= l(@contest.starts_at, format: :short) rescue @contest.starts_at %>
-    –
+    -
     <%= l(@contest.ends_at, format: :short) rescue @contest.ends_at %>
   </p>
 </section>
 
 <div class="cluster" style="margin-bottom: var(--space-5)">
-  <% if user_signed_in? %>
+  <% if @participation %>
+    <span class="badge badge--ac">Registered</span>
+  <% elsif user_signed_in? && %w[upcoming running].include?(@contest.status) %>
     <%= button_to "Register", register_contest_path(@contest.id), method: :post, class: "button" %>
-  <% else %>
+  <% elsif !user_signed_in? %>
     <%= link_to "Sign in to register", new_user_session_path, class: "button" %>
+  <% else %>
+    <span class="page-meta">Registration is closed.</span>
   <% end %>
   <%= link_to "Scoreboard", scoreboard_contest_path(@contest.id), class: "button button--secondary" %>
   <%= link_to "All contests", contests_path, class: "button button--ghost" %>
@@ -36,7 +40,7 @@
         <% @contest_problems.each do |entry| %>
           <tr>
             <td class="num"><%= entry.letter %></td>
-            <td><%= link_to entry.problem.title, problem_path(entry.problem.id) %></td>
+            <td><%= link_to entry.problem.title, problem_path(entry.problem, contest_id: @contest.id) %></td>
             <td><span class="rating-pill"><%= entry.problem.rating %></span></td>
           </tr>
         <% end %>

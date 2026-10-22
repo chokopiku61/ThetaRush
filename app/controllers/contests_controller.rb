@@ -1,35 +1,48 @@
 class ContestsController < ApplicationController
-  include PlaceholderData
-
   before_action :authenticate_user!, only: :register
+  before_action :set_contest, only: %i[show scoreboard register]
 
   def index
-    @contests = placeholder_contests
+    @contests = Contest
+      .left_joins(:contest_problems, :contest_participations)
+      .select(
+        "contests.*",
+        "COUNT(DISTINCT contest_problems.id) AS problem_count",
+        "COUNT(DISTINCT contest_participations.id) AS registered_count"
+      )
+      .group("contests.id")
+      .order(starts_at: :desc)
   end
 
   def show
-    @contest = find_placeholder_contest(params[:id])
-    return redirect_to contests_path, alert: "Contest not found." unless @contest
-
-    @contest_problems = placeholder_contest_problems(@contest)
+    @contest_problems = @contest.contest_problems.includes(:problem)
+    @participation = current_user&.contest_participations&.find_by(contest: @contest)
   end
 
   def scoreboard
-    @contest = find_placeholder_contest(params[:id])
-    return redirect_to contests_path, alert: "Contest not found." unless @contest
-
-    @rows = placeholder_scoreboard_rows
-    @letters = @rows.first&.cells&.map(&:letter) || %w[A B C]
+    @rows = @contest.contest_participations
+      .includes(:user)
+      .order(:rank, :registered_at, :id)
   end
 
   def register
-    contest = find_placeholder_contest(params[:id])
-    unless contest
-      redirect_to contests_path, alert: "Contest not found."
+    unless %w[upcoming running].include?(@contest.status)
+      redirect_to contest_path(@contest), alert: "Registration is closed for this contest."
       return
     end
 
-    flash[:notice] = "Registered for #{contest.title} (placeholder). Real registration comes later."
-    redirect_to contest_path(contest.id)
+    participation = current_user.contest_participations.find_or_create_by!(contest: @contest)
+    Contests::Scoring.recompute_contest!(@contest) if participation.previously_new_record?
+
+    message = participation.previously_new_record? ? "Registered for #{@contest.title}." : "You are already registered."
+    redirect_to contest_path(@contest), notice: message
+  end
+
+  private
+
+  def set_contest
+    @contest = Contest.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to contests_path, alert: "Contest not found."
   end
 end

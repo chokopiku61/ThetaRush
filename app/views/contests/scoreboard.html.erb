@@ -2,13 +2,11 @@
 
 <section class="page-header">
   <h1>Scoreboard</h1>
-  <p class="page-lede"><%= @contest.title %> · ICPC-style standings (placeholder).</p>
+  <p class="page-lede"><%= @contest.title %> · ICPC-style standings.</p>
   <p class="page-meta">
     <%= link_to "Back to contest", contest_path(@contest.id) %>
   </p>
 </section>
-
-<p class="placeholder-note">Static fake standings. Live updates via ActionCable are Milestone 7.</p>
 
 <div class="table-wrap">
   <table class="table">
@@ -18,29 +16,21 @@
         <th>Handle</th>
         <th>Solved</th>
         <th>Penalty</th>
-        <% @letters.each do |letter| %>
-          <th><%= letter %></th>
-        <% end %>
       </tr>
     </thead>
     <tbody>
       <% @rows.each do |row| %>
         <tr>
-          <td class="num"><%= row.rank %></td>
-          <td><%= row.handle %></td>
-          <td class="num"><%= row.solved %></td>
+          <td class="num"><%= row.rank || "-" %></td>
+          <td><%= row.user.username %></td>
+          <td class="num"><%= row.solved_count %></td>
           <td class="num"><%= row.penalty %></td>
-          <% row.cells.each do |cell| %>
-            <td class="num">
-              <% if cell.verdict.present? %>
-                <span title="<%= cell.verdict.upcase %>"><%= cell.text %></span>
-              <% else %>
-                <%= cell.text %>
-              <% end %>
-            </td>
-          <% end %>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
+
+<% if @rows.empty? %>
+  <p class="empty-state">No participants have registered yet.</p>
+<% end %>

@@ -7,7 +7,11 @@
   </h1>
   <p class="page-meta">
     <%= @problem.tags.join(", ") %>
-    · <%= link_to "Back to catalog", problems_path %>
+    <% if @contest %>
+      · Contest <%= link_to @contest.title, contest_path(@contest) %>
+    <% else %>
+      · <%= link_to "Back to catalog", problems_path %>
+    <% end %>
   </p>
 </section>
 
@@ -37,9 +41,13 @@
 
 <section class="submit-panel surface" id="submit">
   <h2>Submit</h2>
-  <% if user_signed_in? %>
-    <p class="page-meta">Choose a language and paste your solution.</p>
+  <% if user_signed_in? && (!@contest || (@contest_participation && @contest_accepting_submissions)) %>
+    <p class="page-meta">
+      Choose a language and paste your solution.
+      <%= "This submission counts toward #{@contest.title}." if @contest %>
+    </p>
     <%= form_with url: problem_submissions_path(@problem), method: :post, class: "form", local: true do %>
+      <%= hidden_field_tag :contest_id, @contest.id if @contest %>
       <div class="field">
         <label for="submission_language">Language</label>
         <%= select_tag :language, options_for_select(@languages, "python"), id: "submission_language", class: "select" %>
@@ -52,6 +60,14 @@
         <%= submit_tag "Submit", class: "button" %>
       </div>
     <% end %>
+  <% elsif user_signed_in? && @contest %>
+    <div class="alert alert--info">
+      <% if @contest_participation %>
+        Contest submissions are closed.
+      <% else %>
+        <%= link_to "Register for #{@contest.title}", contest_path(@contest) %> before submitting.
+      <% end %>
+    </div>
   <% else %>
     <div class="alert alert--info">
       <%= link_to "Sign in", new_user_session_path %> to submit a solution.
