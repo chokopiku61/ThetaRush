@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="ThetaRush">
+  <defs>
+    <linearGradient id="ringOuter" x1="8%" y1="0%" x2="92%" y2="100%">
+      <stop offset="0%" stop-color="#f0f3f8"/>
+      <stop offset="45%" stop-color="#c8d0dc"/>
+      <stop offset="100%" stop-color="#e8ecf4"/>
+    </linearGradient>
+    <linearGradient id="ringInner" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="55%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#ddd6fe"/>
+    </linearGradient>
+    <linearGradient id="sTop" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="sBot" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#c4b5fd"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer tilted ring -->
+  <ellipse cx="64" cy="64" rx="48" ry="36" fill="none" stroke="url(#ringOuter)" stroke-width="14" transform="rotate(-38 64 64)"/>
+  <ellipse cx="64" cy="64" rx="48" ry="36" fill="none" stroke="url(#ringInner)" stroke-width="7" transform="rotate(-38 64 64)" opacity="0.95"/>
+  <!-- Stylized S / rush mark -->
+  <path fill="url(#sTop)" d="M78 28c-10 2-22 10-28 20-4 7-4 14 1 18l18-8c-6-5-8-10-5-15 4-7 12-12 20-14z"/>
+  <path fill="url(#sBot)" d="M50 100c10-2 22-10 28-20 4-7 4-14-1-18l-18 8c6 5 8 10 5 15-4 7-12 12-20 14z"/>
+  <path fill="#e2e8f0" d="M51 66l26-12-4 8-26 12z"/>
+  <path fill="#a78bfa" d="M51 66l26-12v6l-26 12z" opacity="0.85"/>
+</svg>
