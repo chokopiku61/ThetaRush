@@ -14,37 +14,39 @@
 <ul class="limits">
   <li>Time limit: <strong><%= @problem.time_limit_ms %> ms</strong></li>
   <li>Memory limit: <strong><%= @problem.memory_limit_mb %> MB</strong></li>
-  <li>Solved: <strong><%= @problem.solved_count %></strong></li>
+  <li>Solved: <strong><%= @solved_count %></strong></li>
 </ul>
 
 <article class="statement surface">
-  <%= sanitize @problem.statement_html, tags: %w[p code h3 strong em sub sup], attributes: [] %>
+  <%= simple_format(h(@problem.statement)) %>
 
-  <h3>Samples</h3>
-  <div class="sample-grid">
-    <div>
-      <p><strong>Input</strong></p>
-      <pre class="sample"><%= @problem.sample_input %></pre>
+  <% if @problem.sample_input.present? || @problem.sample_output.present? %>
+    <h3>Samples</h3>
+    <div class="sample-grid">
+      <div>
+        <p><strong>Input</strong></p>
+        <pre class="sample"><%= @problem.sample_input %></pre>
+      </div>
+      <div>
+        <p><strong>Output</strong></p>
+        <pre class="sample"><%= @problem.sample_output %></pre>
+      </div>
     </div>
-    <div>
-      <p><strong>Output</strong></p>
-      <pre class="sample"><%= @problem.sample_output %></pre>
-    </div>
-  </div>
+  <% end %>
 </article>
 
 <section class="submit-panel surface" id="submit">
   <h2>Submit</h2>
   <% if user_signed_in? %>
-    <p class="page-meta">Choose a language and paste your solution. Judging is not wired yet.</p>
-    <%= form_with url: problem_submissions_path(@problem.id), method: :post, class: "form", local: true do %>
+    <p class="page-meta">Choose a language and paste your solution.</p>
+    <%= form_with url: problem_submissions_path(@problem), method: :post, class: "form", local: true do %>
       <div class="field">
         <label for="submission_language">Language</label>
         <%= select_tag :language, options_for_select(@languages, "python"), id: "submission_language", class: "select" %>
       </div>
       <div class="field">
-        <label for="submission_source">Source code</label>
-        <%= text_area_tag :source, "def solve():\n    pass\n", id: "submission_source", class: "textarea textarea--code", rows: 12 %>
+        <label for="submission_source_code">Source code</label>
+        <%= text_area_tag :source_code, "a, b = map(int, input().split())\nprint(a + b)\n", id: "submission_source_code", class: "textarea textarea--code", rows: 12 %>
       </div>
       <div class="actions">
         <%= submit_tag "Submit", class: "button" %>

@@ -3,10 +3,13 @@ module ApplicationHelper
     "ac" => "AC",
     "wa" => "WA",
     "tle" => "TLE",
+    "mle" => "MLE",
     "re" => "RE",
     "ce" => "CE",
+    "ie" => "IE",
     "queued" => "Queued",
-    "running" => "Running"
+    "judging" => "Judging",
+    "running" => "Judging"
   }.freeze
 
   def verdict_badge(verdict)

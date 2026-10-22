@@ -1,0 +1,31 @@
+{
+  "title": "A + B",
+  "slug": "a-plus-b",
+  "statement": "Read two integers A and B from standard input (separated by whitespace) and print their sum.\n\nInput\nA single line with two integers A and B (−10^9 ≤ A, B ≤ 10^9).\n\nOutput\nPrint one integer: A + B.",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "rating": 800,
+  "tags": ["implementation", "math"],
+  "sample_input": "1 2",
+  "sample_output": "3",
+  "test_cases": [
+    {
+      "position": 1,
+      "sample": true,
+      "stdin": "1 2\n",
+      "expected_output": "3\n"
+    },
+    {
+      "position": 2,
+      "sample": false,
+      "stdin": "10 20\n",
+      "expected_output": "30\n"
+    },
+    {
+      "position": 3,
+      "sample": false,
+      "stdin": "-5 8\n",
+      "expected_output": "3\n"
+    }
+  ]
+}

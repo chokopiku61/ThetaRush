@@ -2,25 +2,26 @@
 
 <section class="page-header">
   <h1>Problems</h1>
-  <p class="page-lede">Practice catalog. Placeholder problems for UI review.</p>
+  <p class="page-lede">Practice catalog. Pick a problem and submit a solution.</p>
 </section>
 
-<p class="placeholder-note">Fake data only. Real problems arrive with the importer later.</p>
-
-<ul class="card-list">
-  <% @problems.each do |problem| %>
-    <li>
-      <%= link_to problem_path(problem.id), class: "problem-card" do %>
-        <h2 class="problem-card__title">
-          <%= problem.title %>
-          <span class="rating-pill"><%= problem.rating %></span>
-        </h2>
-        <p class="problem-card__meta">
-          <%= problem.tags.join(", ") %>
-          · <%= problem.solved_count %> solved
-          · <%= problem.time_limit_ms %> ms / <%= problem.memory_limit_mb %> MB
-        </p>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+<% if @problems.empty? %>
+  <p class="alert alert--info">No problems yet. Run <code>bin/rails db:seed</code> to load sample problems.</p>
+<% else %>
+  <ul class="card-list">
+    <% @problems.each do |problem| %>
+      <li>
+        <%= link_to problem_path(problem), class: "problem-card" do %>
+          <h2 class="problem-card__title">
+            <%= problem.title %>
+            <span class="rating-pill"><%= problem.rating %></span>
+          </h2>
+          <p class="problem-card__meta">
+            <%= problem.tags.join(", ") %>
+            · <%= problem.time_limit_ms %> ms / <%= problem.memory_limit_mb %> MB
+          </p>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

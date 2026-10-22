@@ -368,7 +368,7 @@ Database schema is mandatory. Models need validations, associations, and busines
 
 As a user, click through core functionality: browse problems, submit and get a verdict, join a contest, see scoreboard (refresh OK), see profile rating after finalize. Wire Sidekiq, Judge0, and rating jobs here. No live WebSocket scoreboard yet.
 
-### [ ] Step 5.1 - Minimal problem data (seeds / importer)
+### [x] Step 5.1 - Minimal problem data (seeds / importer)
 
 **Goal:** Enough problems and tests in the DB to solve something end-to-end.
 
@@ -386,7 +386,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Download huge datasets into the repo
 - Start Judge0 yet (next steps)
 
-### [ ] Step 5.2 - Problems catalog and show (read path)
+### [x] Step 5.2 - Problems catalog and show (read path)
 
 **Goal:** Real `ProblemsController` listing and showing DB problems (replace placeholders).
 
@@ -403,7 +403,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Accept submissions in this step (or keep submit button linking to not-yet-wired action)
 - Add webhook/Judge0 client
 
-### [ ] Step 5.3 - Redis, Sidekiq, JudgeSubmissionJob skeleton
+### [x] Step 5.3 - Redis, Sidekiq, JudgeSubmissionJob skeleton
 
 **Goal:** Background job pipeline ready to enqueue submission judging.
 
@@ -423,7 +423,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Add ActionCable
 - Expose Sidekiq UI without auth in a deployable way (local OK)
 
-### [ ] Step 5.4 - Judge0 CE + Judge0Client
+### [x] Step 5.4 - Judge0 CE + Judge0Client
 
 **Goal:** Run Judge0 CE in Docker and send batch submissions (Python and C++) with limits and expected output.
 
@@ -443,7 +443,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Weaken isolate/sandbox settings
 - Implement live scoreboard cable
 
-### [ ] Step 5.5 - SubmissionsController + Judge0WebhookController
+### [x] Step 5.5 - SubmissionsController + Judge0WebhookController
 
 **Goal:** User submits code; submission is `queued`; webhook persists verdict.
 
@@ -691,11 +691,11 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 | [x] | 13 | 4.3 Contests::Scoring | M4 |
 | [x] | 14 | 4.4 Ratings::Calculator | M4 |
 | [x] | 15 | 4.5 Model tests | M4 |
-| [ ] | 16 | 5.1 Seeds/importer | M5 |
-| [ ] | 17 | 5.2 Problems read path | M5 |
-| [ ] | 18 | 5.3 Sidekiq skeleton | M5 |
-| [ ] | 19 | 5.4 Judge0 + client | M5 |
-| [ ] | 20 | 5.5 Submit + webhook | M5 |
+| [x] | 16 | 5.1 Seeds/importer | M5 |
+| [x] | 17 | 5.2 Problems read path | M5 |
+| [x] | 18 | 5.3 Sidekiq skeleton | M5 |
+| [x] | 19 | 5.4 Judge0 + client | M5 |
+| [x] | 20 | 5.5 Submit + webhook | M5 |
 | [ ] | 21 | 5.6 Contests register/show | M5 |
 | [ ] | 22 | 5.7 Scoring + scoreboard | M5 |
 | [ ] | 23 | 5.8 Finalize + ratings + profile | M5 |

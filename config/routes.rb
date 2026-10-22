@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   end
   resources :submissions, only: [ :show ]
 
+  post "judge0/webhook", to: "judge0_webhook#create"
+
   resources :contests, only: [ :index, :show ] do
     member do
       get :scoreboard
@@ -26,6 +28,11 @@ Rails.application.routes.draw do
   end
 
   resource :profile, only: [ :show ]
+
+  if Rails.env.development?
+    require "sidekiq/web"
+    mount Sidekiq::Web => "/sidekiq"
+  end
 
   # Defines the root path route ("/")
   root "home#index"

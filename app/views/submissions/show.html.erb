@@ -2,28 +2,54 @@
 
 <section class="page-header">
   <h1>Submission #<%= @submission.id %></h1>
-  <p class="page-lede">Placeholder result screen. Real verdicts arrive with Judge0 later.</p>
+  <p class="page-lede">
+    <% if %w[queued judging].include?(@submission.status) %>
+      Judging in progress. Refresh this page for the verdict.
+    <% else %>
+      Judging finished.
+    <% end %>
+  </p>
 </section>
-
-<p class="placeholder-note">No judging backend yet. This page shows the layout for a queued submission.</p>
 
 <div class="surface stack stack--tight">
   <p>
     Problem:
-    <% if @problem %>
-      <%= link_to @problem.title, problem_path(@problem.id) %>
-    <% else %>
-      <%= @submission.problem_title %>
-    <% end %>
+    <%= link_to @problem.title, problem_path(@problem) %>
   </p>
   <p>Language: <strong><%= @submission.language %></strong></p>
-  <p>Status: <%= verdict_badge(@submission.verdict) %></p>
+  <p>Status: <%= verdict_badge(@submission.status) %></p>
+  <% if @submission.time_ms.present? %>
+    <p>Time: <strong><%= @submission.time_ms %> ms</strong></p>
+  <% end %>
+  <% if @submission.memory_kb.present? %>
+    <p>Memory: <strong><%= @submission.memory_kb %> KB</strong></p>
+  <% end %>
   <p class="page-meta">Submitted at <%= l(@submission.submitted_at, format: :short) rescue @submission.submitted_at %></p>
 </div>
 
+<% if @submission.compile_output.present? %>
+  <section class="surface" style="margin-top: var(--space-5)">
+    <h2>Compile output</h2>
+    <pre class="sample"><%= @submission.compile_output %></pre>
+  </section>
+<% end %>
+
+<% if @submission.stderr.present? %>
+  <section class="surface" style="margin-top: var(--space-5)">
+    <h2>Stderr</h2>
+    <pre class="sample"><%= @submission.stderr %></pre>
+  </section>
+<% end %>
+
+<% if @submission.stdout.present? && @submission.status == "ac" %>
+  <section class="surface" style="margin-top: var(--space-5)">
+    <h2>Stdout</h2>
+    <pre class="sample"><%= @submission.stdout %></pre>
+  </section>
+<% end %>
+
 <div class="cluster" style="margin-top: var(--space-5)">
-  <% if @problem %>
-    <%= link_to "Back to problem", problem_path(@problem.id), class: "button button--ghost" %>
-  <% end %>
+  <%= link_to "Refresh", submission_path(@submission), class: "button" %>
+  <%= link_to "Back to problem", problem_path(@problem), class: "button button--ghost" %>
   <%= link_to "Problem catalog", problems_path, class: "button button--secondary" %>
 </div>

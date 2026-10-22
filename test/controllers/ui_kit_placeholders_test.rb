@@ -1,6 +1,24 @@
 require "test_helper"
 
 class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
+  setup do
+    @problem = Problem.create!(
+      title: "A + B",
+      slug: "a-plus-b-test",
+      statement: "Print the sum of two integers.",
+      rating: 800,
+      tags: [ "implementation" ],
+      sample_input: "1 2",
+      sample_output: "3"
+    )
+    @problem.test_cases.create!(
+      position: 1,
+      sample: true,
+      stdin: "1 2\n",
+      expected_output: "3\n"
+    )
+  end
+
   test "ui kit page renders core sections" do
     get ui_kit_path
     assert_response :success
@@ -13,12 +31,12 @@ class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
     assert_select ".textarea--code"
   end
 
-  test "guest can browse placeholder problem and contest screens" do
+  test "guest can browse problem and contest screens" do
     get problems_path
     assert_response :success
     assert_select ".problem-card", minimum: 1
 
-    get problem_path(1)
+    get problem_path(@problem)
     assert_response :success
     assert_select "#submit"
     assert_select "a", text: /Sign in/
@@ -36,7 +54,7 @@ class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
     assert_select ".table"
   end
 
-  test "signed in user can open profile and placeholder submit" do
+  test "signed in user can open profile and submit" do
     user = User.create!(email: "placeholder@example.com", password: "password123")
     post user_session_path, params: { user: { email: user.email, password: "password123" } }
 
@@ -44,14 +62,27 @@ class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".rating-block__value"
 
-    get problem_path(1)
+    get problem_path(@problem)
     assert_response :success
     assert_select "form"
 
-    post problem_submissions_path(1), params: { language: "python", source: "print(1)" }
-    assert_redirected_to %r{/submissions/}
+    assert_enqueued_with(job: JudgeSubmissionJob) do
+      post problem_submissions_path(@problem), params: {
+        language: "python",
+        source_code: "print(1)"
+      }
+    end
+    assert_redirected_to %r{/submissions/\d+}
     follow_redirect!
     assert_response :success
-    assert_match(/placeholder|not implemented/i, flash[:notice].to_s + response.body)
+    assert_select ".badge", text: /Queued|Judging/i
+  end
+
+  test "guest cannot create submission" do
+    post problem_submissions_path(@problem), params: {
+      language: "python",
+      source_code: "print(1)"
+    }
+    assert_redirected_to new_user_session_path
   end
 end

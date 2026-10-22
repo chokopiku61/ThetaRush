@@ -1,0 +1,25 @@
+{
+  "title": "Hello Name",
+  "slug": "hello-name",
+  "statement": "Read a single word (the name) and print Hello, followed by a space, the name, and an exclamation mark.\n\nInput\nOne line with a single word consisting of Latin letters (1–20 characters).\n\nOutput\nHello, <name>!",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "rating": 800,
+  "tags": ["implementation", "strings"],
+  "sample_input": "World",
+  "sample_output": "Hello, World!",
+  "test_cases": [
+    {
+      "position": 1,
+      "sample": true,
+      "stdin": "World\n",
+      "expected_output": "Hello, World!\n"
+    },
+    {
+      "position": 2,
+      "sample": false,
+      "stdin": "ThetaRush\n",
+      "expected_output": "Hello, ThetaRush!\n"
+    }
+  ]
+}
