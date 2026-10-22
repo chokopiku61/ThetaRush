@@ -1,0 +1,76 @@
+<% content_for :title, "#{t("favorites.title")} - ThetaRush" %>
+
+<section class="page-header">
+  <h1><%= t("favorites.title") %></h1>
+</section>
+
+<nav class="tabs">
+  <%= link_to t("favorites.problems_tab"), favorites_path(tab: "problems"), class: "tabs__link #{"tabs__link--active" if @tab == "problems"}" %>
+  <%= link_to t("favorites.contests_tab"), favorites_path(tab: "contests"), class: "tabs__link #{"tabs__link--active" if @tab == "contests"}" %>
+</nav>
+
+<div class="favorites-layout">
+  <div>
+    <% if @tab == "problems" %>
+      <% if @favorite_problems.empty? %>
+        <p class="empty-state"><%= t("favorites.empty_problems") %></p>
+        <%= link_to t("favorites.browse_problems"), problems_path, class: "button" %>
+      <% else %>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th><%= t("problems.columns.title") %></th>
+                <th><%= t("problems.columns.rating") %></th>
+                <th><%= t("problems.columns.tags") %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @favorite_problems.each do |problem| %>
+                <tr>
+                  <td><%= link_to problem.title, problem_path(problem) %></td>
+                  <td><span class="<%= rating_pill_class(problem.rating) %>"><%= problem.rating %></span></td>
+                  <td>
+                    <% problem.tags.each do |tag| %>
+                      <span class="tag"><%= tag %></span>
+                    <% end %>
+                  </td>
+                  <td><%= render "shared/favorite_button", record: problem %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    <% else %>
+      <% if @favorite_contests.empty? %>
+        <p class="empty-state"><%= t("favorites.empty_contests") %></p>
+        <%= link_to t("favorites.browse_contests"), contests_path, class: "button" %>
+      <% else %>
+        <% @favorite_contests.each do |contest| %>
+          <div class="contest-card">
+            <div class="contest-card__body">
+              <h2 class="contest-card__title"><%= link_to contest.title, contest_path(contest) %></h2>
+              <p class="contest-card__meta"><%= contest_status_label(contest.status) %></p>
+            </div>
+            <%= render "shared/favorite_button", record: contest %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <aside class="surface favorites-empty">
+    <%= image_tag "logo.png", alt: "" %>
+    <% if @tab == "contests" && @favorite_contests.empty? %>
+      <p><%= t("favorites.empty_contests") %></p>
+      <%= link_to t("favorites.browse_contests"), contests_path, class: "button" %>
+    <% elsif @tab == "problems" && @favorite_problems.empty? %>
+      <p><%= t("favorites.empty_problems") %></p>
+      <%= link_to t("favorites.browse_problems"), problems_path, class: "button" %>
+    <% else %>
+      <p class="page-meta"><%= t("favorites.title") %></p>
+    <% end %>
+  </aside>
+</div>

@@ -1,0 +1,41 @@
+<% content_for :title, "#{@group.name} - ThetaRush" %>
+
+<section class="page-header">
+  <h1><%= @group.name %></h1>
+  <p class="page-lede"><%= @group.description.presence || t("groups.lede") %></p>
+  <p class="page-meta"><%= t("groups.member_count", count: @group.group_memberships.count) %></p>
+</section>
+
+<div class="cluster" style="margin-bottom: var(--space-5)">
+  <% if user_signed_in? %>
+    <% if @membership %>
+      <%= button_to t("groups.leave"), leave_group_path(@group), method: :delete, class: "button button--ghost" %>
+    <% else %>
+      <%= button_to t("groups.join"), join_group_path(@group), method: :post, class: "button" %>
+    <% end %>
+  <% end %>
+  <%= link_to t("groups.title"), groups_path, class: "button button--secondary" %>
+</div>
+
+<div class="groups-layout">
+  <section class="surface">
+    <h2 style="margin-top:0"><%= t("groups.members") %></h2>
+    <div class="cluster">
+      <% @members.each do |member| %>
+        <span class="sidebar__avatar" title="<%= member.username %>"><%= member.username.first.upcase %></span>
+        <span><%= member.username %></span>
+      <% end %>
+    </div>
+  </section>
+
+  <aside class="surface stack">
+    <div>
+      <h3><%= t("groups.shared_contests") %></h3>
+      <p class="page-meta"><%= t("groups.placeholder_activity") %></p>
+    </div>
+    <div>
+      <h3><%= t("groups.shared_problems") %></h3>
+      <p class="page-meta"><%= t("groups.placeholder_activity") %></p>
+    </div>
+  </aside>
+</div>
