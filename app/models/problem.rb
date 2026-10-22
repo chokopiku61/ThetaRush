@@ -13,11 +13,15 @@ class Problem < ApplicationRecord
             numericality: { only_integer: true, greater_than: 0 }
   validates :tags, presence: true
 
-  before_validation :normalize_slug
+  before_validation :normalize_slug, :normalize_tags
 
   private
 
   def normalize_slug
     self.slug = slug.to_s.strip.downcase
+  end
+
+  def normalize_tags
+    self.tags = tags.split(",").map(&:strip).reject(&:blank?) if tags.is_a?(String)
   end
 end

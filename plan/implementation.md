@@ -499,7 +499,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Broadcast over ActionCable (M7)
 - Update ratings here (Step 5.8)
 
-### [ ] Step 5.8 - Finalize contest, UpdateRatingsJob, profile
+### [x] Step 5.8 - Finalize contest, UpdateRatingsJob, profile
 
 **Goal:** End a contest, recompute ratings, show rating on profile.
 
@@ -517,7 +517,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Live cable updates
 - Revisit Judge0 sandbox limits
 
-### [ ] Step 5.9 - Thin Administrate (optional but planned)
+### [x] Step 5.9 - Thin Administrate (optional but planned)
 
 **Goal:** Minimal Administrate panel to manage problems/contests if seeds are awkward for demos.
 
@@ -698,8 +698,8 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 | [x] | 20 | 5.5 Submit + webhook | M5 |
 | [ ] | 21 | 5.6 Contests register/show | M5 |
 | [ ] | 22 | 5.7 Scoring + scoreboard | M5 |
-| [ ] | 23 | 5.8 Finalize + ratings + profile | M5 |
-| [ ] | 24 | 5.9 Administrate thin | M5 |
+| [x] | 23 | 5.8 Finalize + ratings + profile | M5 |
+| [x] | 24 | 5.9 Administrate thin | M5 |
 | [ ] | 25 | 5.10 Manual checklist | M5 |
 | [ ] | 26 | 6.1 Happy-path tests | M6 |
 | [ ] | 27 | 6.2 Branch tests | M6 |

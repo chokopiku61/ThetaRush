@@ -9,6 +9,9 @@
       <%= nav_link_to "Contests", contests_path %>
       <% if user_signed_in? %>
         <%= nav_link_to "Profile", profile_path %>
+        <% if current_user.admin? %>
+          <%= nav_link_to "Admin", admin_root_path %>
+        <% end %>
       <% end %>
       <%= nav_link_to "UI kit", ui_kit_path %>
     </div>

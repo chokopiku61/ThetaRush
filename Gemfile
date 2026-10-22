@@ -20,6 +20,9 @@ gem "jbuilder"
 # Authentication [https://github.com/heartcombo/devise]
 gem "devise"
 
+# Minimal admin interface for demo data management
+gem "administrate"
+
 # Background jobs [https://github.com/sidekiq/sidekiq]
 # Sidekiq 7.3 is incompatible with connection_pool 3.x (Queue#pop arity).
 gem "sidekiq", "~> 7.3"

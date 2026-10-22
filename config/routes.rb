@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    resources :contests
+    resources :contest_problems
+    resources :problems
+    resources :test_cases
+
+    root to: "contests#index"
+  end
+
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -24,6 +33,7 @@ Rails.application.routes.draw do
     member do
       get :scoreboard
       post :register
+      post :finalize
     end
   end
 

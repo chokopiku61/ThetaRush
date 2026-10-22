@@ -21,6 +21,9 @@
   <% else %>
     <span class="page-meta">Registration is closed.</span>
   <% end %>
+  <% if current_user&.admin? && @contest.ends_at.past? && @contest.status != "finalized" %>
+    <%= button_to "Finalize contest", finalize_contest_path(@contest.id), method: :post, class: "button" %>
+  <% end %>
   <%= link_to "Scoreboard", scoreboard_contest_path(@contest.id), class: "button button--secondary" %>
   <%= link_to "All contests", contests_path, class: "button button--ghost" %>
 </div>

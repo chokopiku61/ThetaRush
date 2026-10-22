@@ -2,26 +2,52 @@
 
 <section class="page-header">
   <h1>Profile</h1>
-  <p class="page-lede">Rating and recent activity. Placeholder numbers for UI review.</p>
+  <p class="page-lede">Rating and recent competitive programming activity.</p>
 </section>
-
-<p class="placeholder-note">Rating math ships in Milestone 4; profile wiring and history in Milestone 5.</p>
 
 <section class="surface profile-header">
   <div>
-    <h2 class="profile-header__name"><%= @profile.handle %></h2>
-    <p class="profile-header__email"><%= @profile.email %></p>
+    <h2 class="profile-header__name"><%= current_user.username %></h2>
+    <p class="profile-header__email"><%= current_user.email %></p>
     <p class="page-meta">
-      <%= @profile.contests_played %> contests · <%= @profile.problems_solved %> problems solved
+      <%= pluralize(@contests_played, "contest") %> · <%= pluralize(@problems_solved, "problem") %> solved
     </p>
   </div>
   <div class="rating-block">
-    <div class="rating-block__value"><%= @profile.rating %></div>
-    <p class="rating-block__label">Current rating · max <%= @profile.max_rating %></p>
+    <div class="rating-block__value"><%= current_user.rating %></div>
+    <p class="rating-block__label">Current rating · max <%= current_user.max_rating %></p>
   </div>
 </section>
 
 <section class="stack" style="margin-top: var(--space-6)">
+  <h2>Rating history</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Contest</th>
+          <th>Rank</th>
+          <th>Change</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @rating_histories.empty? %>
+          <tr><td colspan="4">No rated contests yet.</td></tr>
+        <% else %>
+          <% @rating_histories.each do |history| %>
+            <tr>
+              <td><%= link_to history.contest.title, contest_path(history.contest) %></td>
+              <td class="num"><%= history.rank %></td>
+              <td class="num"><%= "%+d" % (history.new_rating - history.old_rating) %></td>
+              <td class="num"><%= history.new_rating %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
   <h2>Recent submissions</h2>
   <div class="table-wrap">
     <table class="table">
@@ -33,12 +59,16 @@
         </tr>
       </thead>
       <tbody>
-        <% @profile.recent_verdicts.each do |row| %>
-          <tr>
-            <td><%= row.problem %></td>
-            <td><%= verdict_badge(row.verdict) %></td>
-            <td class="num"><%= row.when %></td>
-          </tr>
+        <% if @recent_submissions.empty? %>
+          <tr><td colspan="3">No submissions yet.</td></tr>
+        <% else %>
+          <% @recent_submissions.each do |submission| %>
+            <tr>
+              <td><%= link_to submission.problem.title, problem_path(submission.problem) %></td>
+              <td><%= verdict_badge(submission.status) %></td>
+              <td class="num"><%= time_ago_in_words(submission.submitted_at) %> ago</td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>

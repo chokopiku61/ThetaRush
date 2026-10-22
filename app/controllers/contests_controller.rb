@@ -1,6 +1,7 @@
 class ContestsController < ApplicationController
-  before_action :authenticate_user!, only: :register
-  before_action :set_contest, only: %i[show scoreboard register]
+  before_action :authenticate_user!, only: %i[register finalize]
+  before_action :require_admin!, only: :finalize
+  before_action :set_contest, only: %i[show scoreboard register finalize]
 
   def index
     @contests = Contest
@@ -38,7 +39,18 @@ class ContestsController < ApplicationController
     redirect_to contest_path(@contest), notice: message
   end
 
+  def finalize
+    FinalizeContestJob.perform_now(@contest.id)
+    redirect_to contest_path(@contest), notice: "Contest finalized and ratings updated."
+  rescue ArgumentError => error
+    redirect_to contest_path(@contest), alert: error.message
+  end
+
   private
+
+  def require_admin!
+    head :forbidden unless current_user.admin?
+  end
 
   def set_contest
     @contest = Contest.find(params[:id])
