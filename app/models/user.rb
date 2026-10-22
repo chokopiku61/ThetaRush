@@ -12,6 +12,18 @@ class User < ApplicationRecord
   has_many :contest_participations, dependent: :restrict_with_exception
   has_many :contests, through: :contest_participations
   has_many :rating_histories, dependent: :restrict_with_exception
+  has_many :favorites, dependent: :destroy
+  has_many :group_memberships, dependent: :destroy
+  has_many :groups, through: :group_memberships
+
+  has_many :favorite_problems,
+           through: :favorites,
+           source: :favoritable,
+           source_type: "Problem"
+  has_many :favorite_contests,
+           through: :favorites,
+           source: :favoritable,
+           source_type: "Contest"
 
   validates :username,
             presence: true,

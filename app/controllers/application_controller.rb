@@ -1,7 +1,19 @@
-class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+﻿class ApplicationController < ActionController::Base
   allow_browser versions: :modern
-
-  # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
+
+  around_action :switch_locale
+
+  private
+
+  ALLOWED_LOCALES = %w[en ru].freeze
+
+  def switch_locale(&action)
+    I18n.with_locale(extract_locale, &action)
+  end
+
+  def extract_locale
+    requested = cookies[:locale].presence || session[:locale].presence
+    ALLOWED_LOCALES.include?(requested.to_s) ? requested.to_sym : I18n.default_locale
+  end
 end

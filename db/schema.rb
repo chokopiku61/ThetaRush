@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_214500) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_010002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -81,6 +81,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_214500) do
     t.datetime "updated_at", null: false
     t.index ["starts_at"], name: "index_contests_on_starts_at"
     t.index ["status"], name: "index_contests_on_status"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "favoritable_type", null: false
+    t.bigint "favoritable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["favoritable_type", "favoritable_id"], name: "index_favorites_on_favoritable"
+    t.index ["user_id", "favoritable_type", "favoritable_id"], name: "index_favorites_on_user_and_favoritable", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "group_memberships", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role", default: "member", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id", "user_id"], name: "index_group_memberships_on_group_id_and_user_id", unique: true
+    t.index ["group_id"], name: "index_group_memberships_on_group_id"
+    t.index ["user_id"], name: "index_group_memberships_on_user_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_groups_on_slug", unique: true
   end
 
   create_table "problems", force: :cascade do |t|
@@ -173,6 +204,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_214500) do
   add_foreign_key "contest_participations", "users"
   add_foreign_key "contest_problems", "contests"
   add_foreign_key "contest_problems", "problems"
+  add_foreign_key "favorites", "users"
+  add_foreign_key "group_memberships", "groups"
+  add_foreign_key "group_memberships", "users"
   add_foreign_key "rating_histories", "contests"
   add_foreign_key "rating_histories", "users"
   add_foreign_key "submissions", "contests"

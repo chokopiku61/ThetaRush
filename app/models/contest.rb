@@ -9,6 +9,7 @@ class Contest < ApplicationRecord
   has_many :participants, through: :contest_participations, source: :user
   has_many :submissions, dependent: :restrict_with_exception, inverse_of: :contest
   has_many :rating_histories, dependent: :restrict_with_exception, inverse_of: :contest
+  has_many :favorites, as: :favoritable, dependent: :destroy
 
   validates :title, :starts_at, :ends_at, :status, presence: true
   validates :status, inclusion: { in: STATUSES }

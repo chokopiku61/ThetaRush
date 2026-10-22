@@ -30,23 +30,24 @@ class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
     get ui_kit_path
     assert_response :success
     assert_select "h1", text: "UI kit"
-    assert_select "#buttons"
-    assert_select "#forms"
-    assert_select "#badges"
-    assert_select "#tables"
+    assert_select ".button"
     assert_select ".badge--ac"
-    assert_select ".textarea--code"
+    assert_select ".form"
+    assert_select ".textarea--code", minimum: 1
+    assert_select ".table", minimum: 1
+    assert_select ".alert", minimum: 1
+    assert_select ".type-sample", minimum: 1
+    assert_select ".nav-sample", minimum: 1
   end
 
   test "guest can browse problem and contest screens" do
     get problems_path
     assert_response :success
-    assert_select ".problem-card", minimum: 1
+    assert_select ".table"
 
     get problem_path(@problem)
     assert_response :success
-    assert_select "#submit"
-    assert_select "a", text: /Sign in/
+    assert_select "a", text: /Log in|Sign in/i
 
     get contests_path
     assert_response :success
@@ -67,11 +68,11 @@ class UiKitPlaceholdersTest < ActionDispatch::IntegrationTest
 
     get profile_path
     assert_response :success
-    assert_select ".rating-block__value"
+    assert_select ".profile-header__name", text: user.username
 
     get problem_path(@problem)
     assert_response :success
-    assert_select "form"
+    assert_select "form[action=?]", problem_submissions_path(@problem)
 
     assert_enqueued_with(job: JudgeSubmissionJob) do
       post problem_submissions_path(@problem), params: {

@@ -2,44 +2,42 @@
 
 <section class="page-header">
   <h1>UI kit</h1>
-  <p class="page-lede">Markup and styles for core ThetaRush interface elements. Placeholder content only.</p>
+  <p class="page-lede">Dark surfaces, purple accent, verdict badges, forms, tables, and navigation samples.</p>
 </section>
 
-<ul class="ui-kit-toc">
-  <li><a href="#typography">Typography</a></li>
-  <li><a href="#colors">Colors</a></li>
-  <li><a href="#buttons">Buttons</a></li>
-  <li><a href="#forms">Forms</a></li>
-  <li><a href="#badges">Verdict badges</a></li>
-  <li><a href="#alerts">Alerts</a></li>
-  <li><a href="#tables">Tables</a></li>
-  <li><a href="#cards">Cards</a></li>
-  <li><a href="#nav">Nav sample</a></li>
-</ul>
+<nav aria-label="UI kit sections">
+  <ul class="ui-kit-toc">
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#forms">Forms</a></li>
+    <li><a href="#tables">Tables</a></li>
+    <li><a href="#alerts">Alerts</a></li>
+    <li><a href="#badges">Badges</a></li>
+    <li><a href="#rating">Rating</a></li>
+    <li><a href="#navigation">Navigation</a></li>
+  </ul>
+</nav>
 
-<section class="ui-kit-section" id="typography">
+<section class="ui-kit-section surface" id="typography">
   <h2>Typography</h2>
-  <p class="ui-kit-section__lede">Space Grotesk for display, Source Sans 3 for body, IBM Plex Mono for code and verdicts.</p>
-  <p class="type-sample type-sample--display">Display / Space Grotesk</p>
-  <p class="type-sample type-sample--body">Body / Source Sans 3 - used for statements, forms, and navigation copy.</p>
-  <p class="type-sample type-sample--mono">Mono / IBM Plex Mono - print("hello"); // AC WA TLE</p>
+  <p class="ui-kit-section__lede">Display, body, and monospace faces used across the product.</p>
+  <p class="type-sample type-sample--display">Space Grotesk display</p>
+  <p class="type-sample type-sample--body">Source Sans 3 body copy for statements and UI labels.</p>
+  <p class="type-sample type-sample--mono">IBM Plex Mono — code and timestamps</p>
 </section>
 
-<section class="ui-kit-section" id="colors">
+<section class="ui-kit-section surface" id="colors">
   <h2>Colors</h2>
-  <p class="ui-kit-section__lede">Cool ink on mist with a teal accent.</p>
+  <p class="ui-kit-section__lede">Core surfaces and accent tokens from the dark theme.</p>
   <div class="swatch-row">
     <div class="swatch">
       <div class="swatch__chip" style="background: var(--color-bg)"></div>
       <div class="swatch__label">bg</div>
     </div>
     <div class="swatch">
-      <div class="swatch__chip" style="background: var(--color-surface-raised)"></div>
+      <div class="swatch__chip" style="background: var(--color-surface)"></div>
       <div class="swatch__label">surface</div>
-    </div>
-    <div class="swatch">
-      <div class="swatch__chip" style="background: var(--color-text)"></div>
-      <div class="swatch__label">text</div>
     </div>
     <div class="swatch">
       <div class="swatch__chip" style="background: var(--color-accent)"></div>
@@ -47,152 +45,126 @@
     </div>
     <div class="swatch">
       <div class="swatch__chip" style="background: var(--color-accent-soft)"></div>
-      <div class="swatch__label">accent soft</div>
+      <div class="swatch__label">accent-soft</div>
     </div>
     <div class="swatch">
       <div class="swatch__chip" style="background: var(--color-border)"></div>
       <div class="swatch__label">border</div>
     </div>
+    <div class="swatch">
+      <div class="swatch__chip" style="background: var(--color-text)"></div>
+      <div class="swatch__label">text</div>
+    </div>
   </div>
 </section>
 
-<section class="ui-kit-section" id="buttons">
+<section class="ui-kit-section surface" id="buttons">
   <h2>Buttons</h2>
-  <p class="ui-kit-section__lede">Primary actions, secondary, and ghost styles used in auth and contest flows.</p>
-  <div class="cluster">
-    <button type="button" class="button">Primary</button>
-    <button type="button" class="button button--secondary">Secondary</button>
-    <button type="button" class="button button--ghost">Ghost</button>
-    <button type="button" class="button button--sm">Small</button>
-    <button type="button" class="button" disabled>Disabled</button>
+  <div class="ui-kit-row">
+    <a href="#" class="button">Primary</a>
+    <a href="#" class="button button--secondary">Secondary</a>
+    <a href="#" class="button button--ghost">Ghost</a>
   </div>
 </section>
 
-<section class="ui-kit-section" id="forms">
+<section class="ui-kit-section surface" id="forms">
   <h2>Forms</h2>
-  <p class="ui-kit-section__lede">Text input, language select, and code textarea for the submit flow.</p>
-  <form class="form surface" onsubmit="return false;">
+  <p class="ui-kit-section__lede">Inputs for search, language select, and the code editor textarea.</p>
+  <form class="form" style="max-width: 28rem" onsubmit="return false">
     <div class="field">
-      <label for="kit-title">Text input</label>
-      <input id="kit-title" class="input" type="text" value="Two Sum" autocomplete="off">
+      <label>Input</label>
+      <input class="input" type="text" placeholder="Search problems">
     </div>
     <div class="field">
-      <label for="kit-language">Language select</label>
-      <select id="kit-language" class="select">
-        <option value="python">Python 3</option>
-        <option value="cpp">C++17</option>
+      <label>Select</label>
+      <select class="select">
+        <option>Python</option>
+        <option>C++</option>
       </select>
-      <span class="hint">Supported languages for judging: Python and C++.</span>
     </div>
     <div class="field">
-      <label for="kit-code">Code textarea</label>
-      <textarea id="kit-code" class="textarea textarea--code" rows="8">def solve():
-    n, target = map(int, input().split())
-    nums = list(map(int, input().split()))
-    print(0, 1)
-</textarea>
-    </div>
-    <div class="actions">
-      <button type="submit" class="button">Submit</button>
+      <label>Code</label>
+      <textarea class="textarea textarea--code" rows="5">a, b = map(int, input().split())
+print(a + b)</textarea>
     </div>
   </form>
 </section>
 
-<section class="ui-kit-section" id="badges">
-  <h2>Verdict badges</h2>
-  <p class="ui-kit-section__lede">Statuses shown on submissions and scoreboards.</p>
-  <div class="cluster">
-    <%= verdict_badge("ac") %>
-    <%= verdict_badge("wa") %>
-    <%= verdict_badge("tle") %>
-    <%= verdict_badge("re") %>
-    <%= verdict_badge("ce") %>
-    <%= verdict_badge("queued") %>
-    <%= verdict_badge("running") %>
-  </div>
-</section>
-
-<section class="ui-kit-section" id="alerts">
-  <h2>Alerts</h2>
-  <p class="ui-kit-section__lede">Flash-style messages and inline notices.</p>
-  <div class="stack stack--tight">
-    <div class="alert alert--notice" role="status">Notice: registered for Daily Sprint #42.</div>
-    <div class="alert alert--alert" role="alert">Alert: you must sign in to submit.</div>
-    <div class="alert alert--warn">Warning: contest ends in 12 minutes.</div>
-    <div class="alert alert--info">Info: scoreboard updates on page refresh until live mode ships.</div>
-  </div>
-</section>
-
-<section class="ui-kit-section" id="tables">
+<section class="ui-kit-section surface" id="tables">
   <h2>Tables</h2>
-  <p class="ui-kit-section__lede">Scoreboard and submission history layout.</p>
+  <p class="ui-kit-section__lede">Problem catalog and scoreboard-style rows.</p>
   <div class="table-wrap">
     <table class="table">
       <thead>
         <tr>
-          <th>#</th>
-          <th>Handle</th>
-          <th>Solved</th>
-          <th>Penalty</th>
-          <th>A</th>
-          <th>B</th>
+          <th class="num">#</th>
+          <th>Title</th>
+          <th>Rating</th>
           <th>Verdict</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td class="num">1</td>
-          <td>alice</td>
-          <td class="num">3</td>
-          <td class="num">214</td>
-          <td class="num">+1</td>
-          <td class="num">+2</td>
+          <td>A + B</td>
+          <td><span class="rating-pill rating-pill--newbie">800</span></td>
           <td><%= verdict_badge("ac") %></td>
         </tr>
         <tr>
           <td class="num">2</td>
-          <td>bob</td>
-          <td class="num">2</td>
-          <td class="num">189</td>
-          <td class="num">+1</td>
-          <td class="num">-3</td>
+          <td>Two Sum</td>
+          <td><span class="rating-pill rating-pill--pupil">1400</span></td>
           <td><%= verdict_badge("wa") %></td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td>Shortest Path</td>
+          <td><span class="rating-pill rating-pill--expert">1700</span></td>
+          <td><%= verdict_badge("tle") %></td>
         </tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<section class="ui-kit-section" id="cards">
-  <h2>Cards</h2>
-  <p class="ui-kit-section__lede">Problem and contest list items (interaction containers, not decorative cards).</p>
-  <ul class="card-list">
-    <li>
-      <div class="problem-card">
-        <h3 class="problem-card__title">Two Sum <span class="rating-pill">800</span></h3>
-        <p class="problem-card__meta">arrays, hashing · 142 solved · 1000 ms / 256 MB</p>
-      </div>
-    </li>
-    <li>
-      <div class="contest-card">
-        <h3 class="contest-card__title">Daily Sprint #42</h3>
-        <p class="contest-card__meta">Running · 3 problems · 48 registered</p>
-      </div>
-    </li>
-  </ul>
+<section class="ui-kit-section surface" id="alerts">
+  <h2>Alerts</h2>
+  <div class="alert alert--notice">Notice: contest registration is open.</div>
+  <div class="alert alert--info" style="margin-top: var(--space-3)">Info: judging queue is healthy.</div>
+  <div class="alert alert--warn" style="margin-top: var(--space-3)">Warning: time limit is tight on this problem.</div>
+  <div class="alert alert--alert" style="margin-top: var(--space-3)">Alert: submission failed validation.</div>
 </section>
 
-<section class="ui-kit-section" id="nav">
-  <h2>Nav sample</h2>
-  <p class="ui-kit-section__lede">Compact product navigation pattern used in the site header.</p>
-  <div class="nav-sample" aria-hidden="true">
-    <span class="nav-sample__brand"><span class="site-brand__mark">θ</span>ThetaRush</span>
+<section class="ui-kit-section surface" id="badges">
+  <h2>Verdict badges</h2>
+  <div class="ui-kit-row">
+    <% %w[ac wa tle mle re ce ie queued judging].each do |v| %>
+      <%= verdict_badge(v) %>
+    <% end %>
+  </div>
+</section>
+
+<section class="ui-kit-section surface" id="rating">
+  <h2>Rating pills</h2>
+  <div class="ui-kit-row">
+    <span class="rating-pill rating-pill--newbie">800</span>
+    <span class="rating-pill rating-pill--pupil">1400</span>
+    <span class="rating-pill rating-pill--expert">1700</span>
+    <span class="rating-pill rating-pill--master">2100</span>
+    <span class="rating-pill rating-pill--grandmaster">2500</span>
+  </div>
+</section>
+
+<section class="ui-kit-section surface" id="navigation">
+  <h2>Navigation</h2>
+  <p class="ui-kit-section__lede">Sample top bar using product fonts and muted link treatment.</p>
+  <div class="nav-sample">
+    <span class="nav-sample__brand">ThetaRush</span>
     <div class="nav-sample__links">
-      <span>Problems</span>
-      <span>Contests</span>
-      <span>Profile</span>
-      <span>UI kit</span>
+      <a href="<%= problems_path %>">Problems</a>
+      <a href="<%= contests_path %>">Contests</a>
+      <a href="<%= submissions_path %>">Submissions</a>
+      <a href="<%= ui_kit_path %>">UI kit</a>
     </div>
-    <span class="button button--sm button--ghost">Log out</span>
   </div>
 </section>

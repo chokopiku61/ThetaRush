@@ -1,32 +1,29 @@
 <% content_for :title, "ThetaRush" %>
+<% content_for :wide_main, "1" %>
 
-<section class="home">
-  <h1><span class="site-brand__mark">θ</span>ThetaRush</h1>
-  <p class="home__tagline">Competitive programming: problems, contests, and ratings.</p>
-
-  <% if user_signed_in? %>
-    <div class="session-status session-status--signed-in">
-      <p><strong>You are signed in</strong> as <%= current_user.email %>.</p>
-      <p>Your session persists across page refreshes. Use Log out in the header to end it.</p>
-      <div class="cluster">
-        <%= link_to "Problems", problems_path, class: "button" %>
-        <%= link_to "Contests", contests_path, class: "button button--secondary" %>
-        <%= link_to "Profile", profile_path, class: "button button--ghost" %>
-        <%= link_to "UI kit", ui_kit_path, class: "button button--ghost" %>
+<section class="home" data-controller="matrix-rain">
+  <canvas class="home__canvas" data-matrix-rain-target="canvas" aria-hidden="true"></canvas>
+  <div class="home__content">
+    <%= image_tag "logo.png", alt: "ThetaRush", class: "home__logo" %>
+    <h1 class="home__title"><%= t("home.title") %></h1>
+    <p class="home__tagline"><%= t("home.tagline") %></p>
+    <div class="cluster home__actions">
+      <%= link_to t("home.browse_problems"), problems_path, class: "button" %>
+      <%= link_to t("home.join_contests"), contests_path, class: "button button--secondary" %>
+    </div>
+    <div class="home__stats">
+      <div class="home__stat">
+        <strong><%= number_with_delimiter(@problems_count) %></strong>
+        <span><%= t("home.problems") %></span>
+      </div>
+      <div class="home__stat">
+        <strong><%= number_with_delimiter(@contests_count) %></strong>
+        <span><%= t("home.contests") %></span>
+      </div>
+      <div class="home__stat">
+        <strong><%= number_with_delimiter(@users_count) %></strong>
+        <span><%= t("home.users") %></span>
       </div>
     </div>
-  <% else %>
-    <div class="session-status session-status--guest">
-      <p><strong>You are a guest.</strong> Register or log in to start a session.</p>
-      <p>
-        <%= link_to "Register", new_user_registration_path %>
-        or
-        <%= link_to "Log in", new_user_session_path %>
-      </p>
-      <div class="cluster" style="margin-top: var(--space-3)">
-        <%= link_to "Browse problems", problems_path, class: "button button--secondary" %>
-        <%= link_to "UI kit", ui_kit_path, class: "button button--ghost" %>
-      </div>
-    </div>
-  <% end %>
+  </div>
 </section>

@@ -1,35 +1,43 @@
-<% content_for :title, "Register - ThetaRush" %>
+<% content_for :title, "#{t("auth.register")} - ThetaRush" %>
+<% content_for :hide_sidebar, "1" %>
+<% content_for :body_class, "app-shell--auth" %>
 
-<section class="auth-panel">
-  <h1>Register</h1>
+<div class="auth-shell">
+  <section class="auth-panel">
+    <%= link_to root_path, class: "auth-panel__brand" do %>
+      <%= image_tag "logo.png", alt: "ThetaRush" %>
+      <span>ThetaRush</span>
+    <% end %>
+    <h1><%= t("auth.register") %></h1>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-    <div class="field">
-      <%= f.label :email %>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      <div class="field">
+        <%= f.label :email, t("auth.email") %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password, t("auth.password") %>
+        <% if @minimum_password_length %>
+          <span class="hint">(<%= t("auth.characters_minimum", count: @minimum_password_length) %>)</span>
+        <% end %>
+        <%= f.password_field :password, autocomplete: "new-password" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, t("auth.password_confirmation") %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit t("auth.sign_up"), class: "button" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <%= render "devise/shared/links" %>
     </div>
-
-    <div class="field">
-      <%= f.label :password %>
-      <% if @minimum_password_length %>
-        <span class="hint">(<%= @minimum_password_length %> characters minimum)</span>
-      <% end %>
-      <%= f.password_field :password, autocomplete: "new-password" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :password_confirmation %>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-    </div>
-
-    <div class="actions">
-      <%= f.submit "Sign up", class: "button" %>
-    </div>
-  <% end %>
-
-  <div class="auth-links">
-    <%= render "devise/shared/links" %>
-  </div>
-</section>
+  </section>
+</div>

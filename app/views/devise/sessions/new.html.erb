@@ -1,32 +1,40 @@
-<% content_for :title, "Log in - ThetaRush" %>
+<% content_for :title, "#{t("auth.log_in")} - ThetaRush" %>
+<% content_for :hide_sidebar, "1" %>
+<% content_for :body_class, "app-shell--auth" %>
 
-<section class="auth-panel">
-  <h1>Log in</h1>
+<div class="auth-shell">
+  <section class="auth-panel">
+    <%= link_to root_path, class: "auth-panel__brand" do %>
+      <%= image_tag "logo.png", alt: "ThetaRush" %>
+      <span>ThetaRush</span>
+    <% end %>
+    <h1><%= t("auth.log_in") %></h1>
 
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
-    <div class="field">
-      <%= f.label :email %>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-    </div>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
+      <div class="field">
+        <%= f.label :email, t("auth.email") %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      </div>
 
-    <div class="field">
-      <%= f.label :password %>
-      <%= f.password_field :password, autocomplete: "current-password" %>
-    </div>
+      <div class="field">
+        <%= f.label :password, t("auth.password") %>
+        <%= f.password_field :password, autocomplete: "current-password" %>
+      </div>
 
-    <% if devise_mapping.rememberable? %>
-      <div class="field field--inline">
-        <%= f.check_box :remember_me %>
-        <%= f.label :remember_me %>
+      <% if devise_mapping.rememberable? %>
+        <div class="field field--inline">
+          <%= f.check_box :remember_me %>
+          <%= f.label :remember_me, t("auth.remember_me") %>
+        </div>
+      <% end %>
+
+      <div class="actions">
+        <%= f.submit t("auth.log_in"), class: "button" %>
       </div>
     <% end %>
 
-    <div class="actions">
-      <%= f.submit "Log in", class: "button" %>
+    <div class="auth-links">
+      <%= render "devise/shared/links" %>
     </div>
-  <% end %>
-
-  <div class="auth-links">
-    <%= render "devise/shared/links" %>
-  </div>
-</section>
+  </section>
+</div>

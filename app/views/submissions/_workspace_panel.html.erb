@@ -1,0 +1,62 @@
+<%#
+  Recent submissions panel for the problem workspace.
+  Locals: submissions (Array, newest first)
+%>
+<% latest = submissions.first %>
+<% older = submissions.drop(1) %>
+<% polling = latest && %w[queued judging].include?(latest.status) %>
+<div
+  id="submission-status"
+  class="pkg-menu"
+  <% if polling %>
+    data-controller="submission-status"
+    data-submission-status-url-value="<%= status_submission_path(latest) %>"
+    data-terminal="false"
+  <% else %>
+    data-terminal="true"
+  <% end %>
+>
+  <% if latest %>
+    <div class="pkg-menu__latest">
+      <div class="pkg-menu__latest-main">
+        <%= verdict_badge(latest.status) %>
+        <span class="pkg-menu__ago" title="<%= latest.submitted_at %>"><%= compact_ago(latest.submitted_at) %></span>
+        <span class="pkg-menu__meta">
+          <% if latest.time_ms.present? %>
+            <span class="pkg-menu__metric"><%= latest.time_ms %> ms</span>
+          <% end %>
+          <% if latest.memory_kb.present? %>
+            <span class="pkg-menu__metric"><%= format_memory(latest.memory_kb) %></span>
+          <% end %>
+          <span class="pkg-menu__metric"><%= language_label(latest.language) %></span>
+        </span>
+      </div>
+      <%= link_to t("problems.open_submission"), submission_path(latest), class: "button button--secondary button--sm pkg-menu__open" %>
+    </div>
+
+    <% if older.any? %>
+      <ul class="pkg-menu__list" aria-label="<%= t("problems.recent_submissions") %>">
+        <% older.each do |submission| %>
+          <li class="pkg-menu__row">
+            <%= verdict_badge(submission.status) %>
+            <span class="pkg-menu__ago"><%= compact_ago(submission.submitted_at) %></span>
+            <span class="pkg-menu__meta">
+              <% if submission.time_ms.present? %>
+                <span class="pkg-menu__metric"><%= submission.time_ms %> ms</span>
+              <% end %>
+              <% if submission.memory_kb.present? %>
+                <span class="pkg-menu__metric"><%= format_memory(submission.memory_kb) %></span>
+              <% end %>
+              <span class="pkg-menu__metric"><%= language_label(submission.language) %></span>
+            </span>
+            <%= link_to "##{submission.id}", submission_path(submission), class: "pkg-menu__id" %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% else %>
+    <div class="pkg-menu__empty">
+      <span class="page-meta"><%= t("problems.no_submissions_yet") %></span>
+    </div>
+  <% end %>
+</div>

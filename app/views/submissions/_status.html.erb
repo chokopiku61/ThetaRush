@@ -1,0 +1,20 @@
+<% terminal = !%w[queued judging].include?(submission.status) %>
+<div
+  id="submission-status"
+  class="workspace__status-info"
+  data-controller="<%= terminal ? nil : "submission-status" %>"
+  data-submission-status-url-value="<%= status_submission_path(submission) %>"
+  data-terminal="<%= terminal %>"
+>
+  <div class="cluster">
+    <span><%= t("problems.status") %>:</span>
+    <%= verdict_badge(submission.status) %>
+    <% if submission.time_ms.present? %>
+      <span class="page-meta"><%= submission.time_ms %> ms</span>
+    <% end %>
+    <% if submission.memory_kb.present? %>
+      <span class="page-meta"><%= format_memory(submission.memory_kb) %></span>
+    <% end %>
+    <%= link_to "##{submission.id}", submission_path(submission), class: "button button--secondary button--sm" %>
+  </div>
+</div>

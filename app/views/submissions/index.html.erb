@@ -1,0 +1,64 @@
+<% content_for :title, "#{t("submissions.title")} - ThetaRush" %>
+
+<section class="page-header">
+  <h1><%= t("submissions.title") %></h1>
+  <p class="page-lede"><%= t("submissions.lede") %></p>
+</section>
+
+<% if @guest %>
+  <div class="alert alert--info">
+    <%= link_to t("nav.log_in"), new_user_session_path %> — <%= t("submissions.sign_in") %>
+  </div>
+<% else %>
+<%= form_with url: submissions_path, method: :get, local: true, class: "filters" do %>
+
+  <%= select_tag :verdict,
+        options_for_select([[t("submissions.filters.all"), ""]] + Submission::STATUSES.map { |s| [s.upcase, s] }, params[:verdict]),
+        class: "select" %>
+  <%= select_tag :language,
+        options_for_select([[t("submissions.filters.all"), ""], ["Python", "python"], ["C++", "cpp"]], params[:language]),
+        class: "select" %>
+  <%= select_tag :problem_id,
+        options_from_collection_for_select(@problems, :id, :title, params[:problem_id]),
+        include_blank: t("submissions.filters.problem"),
+        class: "select" %>
+  <%= submit_tag t("common.apply"), class: "button button--sm" %>
+  <%= link_to t("common.clear"), submissions_path, class: "button button--ghost button--sm" %>
+<% end %>
+
+<% if @submissions.empty? %>
+  <p class="empty-state"><%= t("submissions.empty") %></p>
+<% else %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%= t("submissions.columns.id") %></th>
+          <th><%= t("submissions.columns.problem") %></th>
+          <th><%= t("submissions.columns.language") %></th>
+          <th><%= t("submissions.columns.verdict") %></th>
+          <th><%= t("submissions.columns.time") %></th>
+          <th><%= t("submissions.columns.memory") %></th>
+          <th><%= t("submissions.columns.when") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @submissions.each do |submission| %>
+          <tr>
+            <td class="num"><%= link_to submission.id, submission_path(submission) %></td>
+            <td><%= link_to submission.problem.title, problem_path(submission.problem) %></td>
+            <td><%= language_label(submission.language) %></td>
+            <td><%= verdict_badge(submission.status) %></td>
+            <td class="num"><%= submission.time_ms.present? ? "#{submission.time_ms} ms" : "-" %></td>
+            <td class="num"><%= format_memory(submission.memory_kb) %></td>
+            <td class="num">
+              <span class="status-dot status-dot--<%= submission.status %>"></span>
+              <%= time_ago_label(submission.submitted_at) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+<% end %>

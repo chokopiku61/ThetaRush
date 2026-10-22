@@ -57,6 +57,23 @@ bin/rails db:seed
 bin/rails import:problems
 ```
 
+## Manual happy path
+
+Walked through on a local stack: Postgres and Redis from `docker compose`, Judge0 from `docker-compose.judge0.yml`, Rails bound to `0.0.0.0`, and Sidekiq. `bin/rails db:seed` loads A + B, Hello Name, and a running "ThetaRush Demo Contest". Seeding again resets that contest to a new running window.
+
+1. Register two users. A contest with one participant writes a history row and leaves the rating unchanged.
+2. As the first user, open **A + B** and submit the Python sample (`a, b = map(int, input().split())` then `print(a + b)`). Refresh the submission page until the verdict is AC.
+3. Open the demo contest, register, open **A + B** from the contest problem list, and submit the same solution. Verdict AC. This submission is what the scoreboard counts.
+4. Log out. Register the second user, join the same contest, and submit a wrong solution (for example `print(0)`). Verdict WA.
+5. Open the scoreboard and refresh. The first user is rank 1 with 1 solve. The second user is rank 2 with 0 solves and 0 penalty. A wrong attempt adds penalty only after that problem is accepted.
+6. End the contest, then finalize. The Finalize button is on the contest page for an admin, and only after `ends_at` is in the past.
+   - `bundle exec rails runner "User.find_by!(email: 'you@example.com').update!(admin: true)"`
+   - In Admin, edit the demo contest and set **Ends at** to a time after the contest submissions and already in the past. An end time before those submissions drops them from the standings.
+   - On the contest page, click **Finalize contest**.
+7. Open each profile. The higher place gains rating and the lower place loses it. Both pages list a rating history row for the contest.
+
+Guests can read problems and the scoreboard. Submitting and registering require a signed-in user.
+
 ## Notes
 
 - Never run contestant code on the host; judging goes through Judge0 isolate.

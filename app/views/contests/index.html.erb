@@ -1,26 +1,41 @@
-<% content_for :title, "Contests - ThetaRush" %>
+<% content_for :title, "#{t("contests.title")} - ThetaRush" %>
 
 <section class="page-header">
-  <h1>Contests</h1>
-  <p class="page-lede">Tournaments and daily sprints.</p>
+  <h1><%= t("contests.title") %></h1>
+  <p class="page-lede"><%= t("contests.lede") %></p>
 </section>
 
-<ul class="card-list">
-  <% @contests.each do |contest| %>
-    <li>
-      <%= link_to contest_path(contest.id), class: "contest-card" do %>
-        <h2 class="contest-card__title"><%= contest.title %></h2>
-        <p class="contest-card__meta">
-          <%= contest_status_label(contest.status) %>
-          · <%= contest.problem_count %> problems
-          · <%= contest.registered_count %> registered
-          · Starts <%= l(contest.starts_at, format: :short) rescue contest.starts_at %>
-        </p>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+<nav class="tabs" aria-label="<%= t("contests.title") %>">
+  <%= link_to t("contests.tabs.upcoming"), contests_path(tab: "upcoming"), class: "tabs__link #{"tabs__link--active" if @tab == "upcoming"}" %>
+  <%= link_to t("contests.tabs.running"), contests_path(tab: "running"), class: "tabs__link #{"tabs__link--active" if @tab == "running"}" %>
+  <%= link_to t("contests.tabs.finished"), contests_path(tab: "finished"), class: "tabs__link #{"tabs__link--active" if @tab == "finished"}" %>
+</nav>
 
 <% if @contests.empty? %>
-  <p class="empty-state">No contests are available yet.</p>
+  <p class="empty-state"><%= t("contests.empty") %></p>
+<% else %>
+  <% @contests.each do |contest| %>
+    <div class="contest-card">
+      <div class="contest-card__body">
+        <h2 class="contest-card__title"><%= link_to contest.title, contest_path(contest) %></h2>
+        <p class="contest-card__meta">
+          <span class="badge badge--<%= contest.status == "running" ? "ac" : (contest.status == "upcoming" ? "queued" : "ce") %>">
+            <%= contest_status_label(contest.status) %>
+          </span>
+          · <%= contest.problem_count %> · <%= contest.registered_count %>
+          · <%= l(contest.starts_at, format: :short) rescue contest.starts_at %>
+        </p>
+      </div>
+      <div class="cluster">
+        <%= render "shared/favorite_button", record: contest, favorite: @favorite_map[contest.id] %>
+        <% if contest.status == "running" %>
+          <%= link_to t("contests.enter"), contest_path(contest), class: "button button--sm" %>
+        <% elsif contest.status == "upcoming" %>
+          <%= link_to t("contests.register"), contest_path(contest), class: "button button--secondary button--sm" %>
+        <% else %>
+          <%= link_to t("contests.view_results"), scoreboard_contest_path(contest), class: "button button--ghost button--sm" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 <% end %>

@@ -1,7 +1,10 @@
 <% content_for :title, "#{@contest.title} - ThetaRush" %>
 
 <section class="page-header">
-  <h1><%= @contest.title %></h1>
+  <div class="cluster" style="justify-content: space-between">
+    <h1 style="margin: 0"><%= @contest.title %></h1>
+    <%= render "shared/favorite_button", record: @contest, favorite: @favorite %>
+  </div>
   <p class="page-lede"><%= @contest.description %></p>
   <p class="page-meta">
     <%= contest_status_label(@contest.status) %>
@@ -13,30 +16,30 @@
 
 <div class="cluster" style="margin-bottom: var(--space-5)">
   <% if @participation %>
-    <span class="badge badge--ac">Registered</span>
+    <span class="badge badge--ac"><%= t("contests.registered_badge") %></span>
   <% elsif user_signed_in? && %w[upcoming running].include?(@contest.status) %>
-    <%= button_to "Register", register_contest_path(@contest.id), method: :post, class: "button" %>
+    <%= button_to t("contests.register"), register_contest_path(@contest.id), method: :post, class: "button" %>
   <% elsif !user_signed_in? %>
-    <%= link_to "Sign in to register", new_user_session_path, class: "button" %>
+    <%= link_to t("contests.sign_in_to_register"), new_user_session_path, class: "button" %>
   <% else %>
-    <span class="page-meta">Registration is closed.</span>
+    <span class="page-meta"><%= t("contests.registration_closed_label") %></span>
   <% end %>
   <% if current_user&.admin? && @contest.ends_at.past? && @contest.status != "finalized" %>
-    <%= button_to "Finalize contest", finalize_contest_path(@contest.id), method: :post, class: "button" %>
+    <%= button_to t("contests.finalize"), finalize_contest_path(@contest.id), method: :post, class: "button" %>
   <% end %>
-  <%= link_to "Scoreboard", scoreboard_contest_path(@contest.id), class: "button button--secondary" %>
-  <%= link_to "All contests", contests_path, class: "button button--ghost" %>
+  <%= link_to t("contests.scoreboard"), scoreboard_contest_path(@contest.id), class: "button button--secondary" %>
+  <%= link_to t("contests.all"), contests_path, class: "button button--ghost" %>
 </div>
 
 <section class="stack">
-  <h2>Problems</h2>
+  <h2><%= t("contests.problems") %></h2>
   <div class="table-wrap">
     <table class="table">
       <thead>
         <tr>
-          <th>#</th>
-          <th>Title</th>
-          <th>Rating</th>
+          <th><%= t("contests.columns.letter") %></th>
+          <th><%= t("contests.columns.title") %></th>
+          <th><%= t("contests.columns.rating") %></th>
         </tr>
       </thead>
       <tbody>
@@ -44,7 +47,7 @@
           <tr>
             <td class="num"><%= entry.letter %></td>
             <td><%= link_to entry.problem.title, problem_path(entry.problem, contest_id: @contest.id) %></td>
-            <td><span class="rating-pill"><%= entry.problem.rating %></span></td>
+            <td><span class="<%= rating_pill_class(entry.problem.rating) %>"><%= entry.problem.rating %></span></td>
           </tr>
         <% end %>
       </tbody>

@@ -1,27 +1,56 @@
-<% content_for :title, "Problems - ThetaRush" %>
+<% content_for :title, "#{t("problems.title")} - ThetaRush" %>
 
 <section class="page-header">
-  <h1>Problems</h1>
-  <p class="page-lede">Practice catalog. Pick a problem and submit a solution.</p>
+  <h1><%= t("problems.title") %></h1>
+  <p class="page-lede"><%= t("problems.lede") %></p>
 </section>
 
+<%= form_with url: problems_path, method: :get, local: true, class: "filters" do %>
+  <%= text_field_tag :q, params[:q], class: "input", placeholder: t("problems.search") %>
+  <%= number_field_tag :rating_min, params[:rating_min], class: "input", placeholder: t("problems.rating_min"), min: 0 %>
+  <%= number_field_tag :rating_max, params[:rating_max], class: "input", placeholder: t("problems.rating_max"), min: 0 %>
+  <%= select_tag :tag,
+        options_for_select([[t("problems.all_tags"), ""]] + @all_tags.map { |tag| [tag, tag] }, params[:tag]),
+        class: "select" %>
+  <%= submit_tag t("common.apply"), class: "button button--sm" %>
+  <%= link_to t("common.clear"), problems_path, class: "button button--ghost button--sm" %>
+<% end %>
+
 <% if @problems.empty? %>
-  <p class="alert alert--info">No problems yet. Run <code>bin/rails db:seed</code> to load sample problems.</p>
+  <p class="alert alert--info"><%= t("problems.empty") %></p>
 <% else %>
-  <ul class="card-list">
-    <% @problems.each do |problem| %>
-      <li>
-        <%= link_to problem_path(problem), class: "problem-card" do %>
-          <h2 class="problem-card__title">
-            <%= problem.title %>
-            <span class="rating-pill"><%= problem.rating %></span>
-          </h2>
-          <p class="problem-card__meta">
-            <%= problem.tags.join(", ") %>
-            · <%= problem.time_limit_ms %> ms / <%= problem.memory_limit_mb %> MB
-          </p>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%= t("problems.columns.title") %></th>
+          <th><%= t("problems.columns.rating") %></th>
+          <th><%= t("problems.columns.tags") %></th>
+          <th><%= t("problems.columns.time") %></th>
+          <th><%= t("problems.columns.memory") %></th>
+          <th><%= t("problems.columns.solved") %></th>
+          <th><%= t("problems.columns.favorite") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @problems.each do |problem| %>
+          <tr>
+            <td><%= link_to problem.title, problem_path(problem) %></td>
+            <td><span class="<%= rating_pill_class(problem.rating) %>"><%= problem.rating %></span></td>
+            <td>
+              <% problem.tags.each do |tag| %>
+                <span class="tag"><%= tag %></span>
+              <% end %>
+            </td>
+            <td class="num"><%= (problem.time_limit_ms / 1000.0).round(1) %>s</td>
+            <td class="num"><%= problem.memory_limit_mb %>MB</td>
+            <td class="num"><%= @solved_counts[problem.id] || 0 %></td>
+            <td>
+              <%= render "shared/favorite_button", record: problem, favorite: @favorite_map[problem.id] %>
+            </td>
+          </tr>
         <% end %>
-      </li>
-    <% end %>
-  </ul>
+      </tbody>
+    </table>
+  </div>
 <% end %>

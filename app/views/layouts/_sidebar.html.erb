@@ -1,0 +1,72 @@
+﻿<aside class="sidebar" id="app-sidebar" data-sidebar-target="panel" aria-label="<%= t("nav.main") %>">
+  <a class="sidebar__brand" href="<%= root_path %>" title="ThetaRush">
+    <%= image_tag "logo.png", alt: "ThetaRush", class: "sidebar__logo" %>
+  </a>
+
+  <nav class="sidebar__nav">
+    <% visible_sidebar_sections.each do |section| %>
+      <%= sidebar_link_to t("nav.#{section[:key]}"), public_send(section[:path]),
+            icon: section[:icon],
+            data: { sidebar_target: "link", action: "click->sidebar#close" } %>
+    <% end %>
+  </nav>
+
+  <div class="sidebar__footer">
+    <div class="sidebar__locale" role="group" aria-label="<%= t("nav.language") %>">
+      <% %i[en ru].each do |locale| %>
+        <%= button_to locale.to_s.upcase, locale_path,
+              method: :patch,
+              params: { locale: locale },
+              class: "sidebar__locale-btn#{" sidebar__locale-btn--active" if I18n.locale == locale}",
+              form_class: "sidebar__locale-form",
+              title: locale.to_s.upcase %>
+      <% end %>
+    </div>
+
+    <% if user_signed_in? %>
+      <div class="sidebar__user" title="<%= current_user.username %> (<%= current_user.rating %>)">
+        <span class="sidebar__avatar" aria-hidden="true"><%= current_user.username.to_s.first.to_s.upcase %></span>
+        <span class="sidebar__label"><%= current_user.username %></span>
+      </div>
+      <%= button_to destroy_user_session_path,
+            method: :delete,
+            class: "sidebar__icon-btn sidebar__logout",
+            form_class: "sidebar__logout-form",
+            title: t("nav.log_out"),
+            aria: { label: t("nav.log_out") } do %>
+        <%= sidebar_icon("logout") %>
+        <span class="sidebar__label"><%= t("nav.log_out") %></span>
+      <% end %>
+    <% else %>
+      <div class="sidebar__auth">
+        <%= link_to new_user_session_path,
+              class: "sidebar__icon-btn",
+              title: t("nav.log_in"),
+              aria: { label: t("nav.log_in") } do %>
+          <%= sidebar_icon("login") %>
+          <span class="sidebar__label"><%= t("nav.log_in") %></span>
+        <% end %>
+        <%= link_to t("nav.register"), new_user_registration_path,
+              class: "sidebar__icon-btn sidebar__icon-btn--text",
+              title: t("nav.register") %>
+      </div>
+    <% end %>
+  </div>
+
+  <button type="button"
+          class="sidebar__collapse"
+          data-sidebar-target="collapse"
+          data-action="sidebar#toggleCollapse"
+          data-collapse-label="<%= t("nav.collapse") %>"
+          data-expand-label="<%= t("nav.expand") %>"
+          aria-expanded="true"
+          aria-controls="app-sidebar"
+          aria-label="<%= t("nav.collapse") %>"
+          title="<%= t("nav.collapse") %>">
+    <span class="sidebar__collapse-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 14" fill="none">
+        <path d="M3 11 L12 3 L21 11" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+</aside>

@@ -1,77 +1,150 @@
-<% content_for :title, "#{@problem.title} - ThetaRush" %>
+<% content_for :title, "#{@contest_problem ? "#{@contest_problem.letter}. " : ""}#{@problem.title} - ThetaRush" %>
+<% content_for :wide_main, "1" %>
 
-<section class="page-header">
-  <h1>
-    <%= @problem.title %>
-    <span class="rating-pill"><%= @problem.rating %></span>
-  </h1>
-  <p class="page-meta">
-    <%= @problem.tags.join(", ") %>
-    <% if @contest %>
-      · Contest <%= link_to @contest.title, contest_path(@contest) %>
-    <% else %>
-      · <%= link_to "Back to catalog", problems_path %>
+<div class="workspace" data-controller="split-pane">
+  <div class="workspace__pane workspace__pane--statement" data-split-pane-target="left">
+    <% if @contest && @contest_problems.present? %>
+      <nav class="contest-nav" aria-label="<%= t("problems.contest_problems") %>">
+        <% if @previous_contest_problem %>
+          <%= link_to t("problems.previous"),
+                problem_path(@previous_contest_problem.problem, contest_id: @contest.id),
+                class: "contest-nav__adjacent",
+                rel: "prev" %>
+        <% else %>
+          <span class="contest-nav__adjacent contest-nav__adjacent--disabled" aria-disabled="true"><%= t("problems.previous") %></span>
+        <% end %>
+
+        <div class="contest-nav__letters" role="list">
+          <% @contest_problems.each do |entry| %>
+            <%= link_to entry.letter,
+                  problem_path(entry.problem, contest_id: @contest.id),
+                  class: "contest-nav__letter#{" contest-nav__letter--active" if entry.id == @contest_problem.id}",
+                  role: "listitem",
+                  aria: { current: (entry.id == @contest_problem.id ? "page" : nil) },
+                  title: "#{entry.letter}. #{entry.problem.title}" %>
+          <% end %>
+        </div>
+
+        <% if @next_contest_problem %>
+          <%= link_to t("problems.next"),
+                problem_path(@next_contest_problem.problem, contest_id: @contest.id),
+                class: "contest-nav__adjacent",
+                rel: "next" %>
+        <% else %>
+          <span class="contest-nav__adjacent contest-nav__adjacent--disabled" aria-disabled="true"><%= t("problems.next") %></span>
+        <% end %>
+      </nav>
     <% end %>
-  </p>
-</section>
 
-<ul class="limits">
-  <li>Time limit: <strong><%= @problem.time_limit_ms %> ms</strong></li>
-  <li>Memory limit: <strong><%= @problem.memory_limit_mb %> MB</strong></li>
-  <li>Solved: <strong><%= @solved_count %></strong></li>
-</ul>
-
-<article class="statement surface">
-  <%= simple_format(h(@problem.statement)) %>
-
-  <% if @problem.sample_input.present? || @problem.sample_output.present? %>
-    <h3>Samples</h3>
-    <div class="sample-grid">
-      <div>
-        <p><strong>Input</strong></p>
-        <pre class="sample"><%= @problem.sample_input %></pre>
-      </div>
-      <div>
-        <p><strong>Output</strong></p>
-        <pre class="sample"><%= @problem.sample_output %></pre>
-      </div>
+    <div class="cluster" style="justify-content: space-between; margin-bottom: var(--space-3)">
+      <h1 style="margin: 0; font-size: var(--text-2xl)">
+        <% if @contest_problem %>
+          <span class="workspace__letter"><%= @contest_problem.letter %>.</span>
+        <% end %>
+        <%= @problem.title %>
+      </h1>
+      <%= render "shared/favorite_button", record: @problem, favorite: @favorite %>
     </div>
-  <% end %>
-</article>
 
-<section class="submit-panel surface" id="submit">
-  <h2>Submit</h2>
-  <% if user_signed_in? && (!@contest || (@contest_participation && @contest_accepting_submissions)) %>
-    <p class="page-meta">
-      Choose a language and paste your solution.
-      <%= "This submission counts toward #{@contest.title}." if @contest %>
-    </p>
-    <%= form_with url: problem_submissions_path(@problem), method: :post, class: "form", local: true do %>
-      <%= hidden_field_tag :contest_id, @contest.id if @contest %>
-      <div class="field">
-        <label for="submission_language">Language</label>
-        <%= select_tag :language, options_for_select(@languages, "python"), id: "submission_language", class: "select" %>
-      </div>
-      <div class="field">
-        <label for="submission_source_code">Source code</label>
-        <%= text_area_tag :source_code, "a, b = map(int, input().split())\nprint(a + b)\n", id: "submission_source_code", class: "textarea textarea--code", rows: 12 %>
-      </div>
-      <div class="actions">
-        <%= submit_tag "Submit", class: "button" %>
-      </div>
-    <% end %>
-  <% elsif user_signed_in? && @contest %>
-    <div class="alert alert--info">
-      <% if @contest_participation %>
-        Contest submissions are closed.
-      <% else %>
-        <%= link_to "Register for #{@contest.title}", contest_path(@contest) %> before submitting.
+    <ul class="limits">
+      <li><span class="<%= rating_pill_class(@problem.rating) %>"><%= @problem.rating %></span></li>
+      <% @problem.tags.each do |tag| %>
+        <li><span class="tag"><%= tag %></span></li>
       <% end %>
-    </div>
-  <% else %>
-    <div class="alert alert--info">
-      <%= link_to "Sign in", new_user_session_path %> to submit a solution.
-      Guests can still read the statement.
-    </div>
-  <% end %>
-</section>
+      <li><%= t("problems.time_limit") %>: <%= @problem.time_limit_ms %> ms</li>
+      <li><%= t("problems.memory_limit") %>: <%= @problem.memory_limit_mb %> MB</li>
+      <li><%= t("problems.solved") %>: <%= @solved_count %></li>
+    </ul>
+
+    <p class="page-meta" style="margin-bottom: var(--space-4)">
+      <% if @contest %>
+        <%= link_to @contest.title, contest_path(@contest) %>
+      <% else %>
+        <%= link_to t("problems.back_to_catalog"), problems_path %>
+      <% end %>
+    </p>
+
+    <article class="statement">
+      <%= simple_format(h(@problem.statement)) %>
+
+      <% if @problem.sample_input.present? || @problem.sample_output.present? %>
+        <h3>Samples</h3>
+        <div class="sample-grid">
+          <div>
+            <p><strong>Input</strong></p>
+            <pre class="sample"><%= @problem.sample_input %></pre>
+          </div>
+          <div>
+            <p><strong>Output</strong></p>
+            <pre class="sample"><%= @problem.sample_output %></pre>
+          </div>
+        </div>
+      <% end %>
+    </article>
+  </div>
+
+  <div
+    class="workspace__divider"
+    data-split-pane-target="divider"
+    data-action="pointerdown->split-pane#start"
+    role="separator"
+    aria-orientation="vertical"
+    tabindex="0"
+  ></div>
+
+  <div class="workspace__pane workspace__pane--editor" data-controller="file-upload">
+    <% if user_signed_in? && (!@contest || @contest_accepting_submissions) %>
+      <%= form_with url: problem_submissions_path(@problem), method: :post, class: "form", data: { turbo: true }, style: "display:flex;flex-direction:column;flex:1;min-height:0" do %>
+        <%= hidden_field_tag :contest_id, @contest.id if @contest %>
+
+        <div class="workspace__toolbar">
+          <label class="visually-hidden" for="submission_language"><%= t("problems.language") %></label>
+          <%= select_tag :language, options_for_select(@languages, "python"), id: "submission_language", class: "select", style: "width:auto;min-width:8rem" %>
+          <button type="button" class="button button--ghost button--sm" data-action="file-upload#pick"><%= t("problems.upload_file") %></button>
+          <input type="file" accept=".py,.cpp,.cc,.cxx,.c,.txt" data-file-upload-target="input" data-action="change->file-upload#load" hidden>
+        </div>
+
+        <div class="workspace__editor-body">
+          <%= text_area_tag :source_code,
+                "a, b = map(int, input().split())\nprint(a + b)\n",
+                id: "submission_source_code",
+                class: "textarea textarea--code",
+                rows: 18,
+                data: { file_upload_target: "textarea" } %>
+        </div>
+
+        <div class="workspace__status">
+          <div class="cluster workspace__status-actions">
+            <%= link_to t("problems.all_submissions"),
+                  submissions_path(problem_id: @problem.id),
+                  class: "button button--ghost button--sm" %>
+            <%= submit_tag t("problems.submit"), class: "button button--submit" %>
+          </div>
+          <%= render "submissions/workspace_panel", submissions: @recent_submissions %>
+        </div>
+      <% end %>
+    <% elsif user_signed_in? && @contest %>
+      <div class="workspace__editor-body">
+        <div class="alert alert--info">
+          <%= t("problems.contest_closed") %>
+        </div>
+      </div>
+    <% else %>
+      <div class="workspace__editor-body">
+        <div class="alert alert--info">
+          <%= link_to t("nav.log_in"), new_user_session_path %> — <%= t("problems.sign_in_to_submit") %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+</style>

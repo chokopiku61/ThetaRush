@@ -1,10 +1,10 @@
-<% content_for :title, "Scoreboard - #{@contest.title} - ThetaRush" %>
+<% content_for :title, "#{t("contests.scoreboard_title")} - #{@contest.title} - ThetaRush" %>
 
 <section class="page-header">
-  <h1>Scoreboard</h1>
-  <p class="page-lede"><%= @contest.title %> · ICPC-style standings.</p>
+  <h1><%= t("contests.scoreboard_title") %></h1>
+  <p class="page-lede"><%= t("contests.scoreboard_lede", title: @contest.title) %></p>
   <p class="page-meta">
-    <%= link_to "Back to contest", contest_path(@contest.id) %>
+    <%= link_to t("contests.back_to_contest"), contest_path(@contest.id) %>
   </p>
 </section>
 
@@ -12,10 +12,10 @@
   <table class="table">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Handle</th>
-        <th>Solved</th>
-        <th>Penalty</th>
+        <th><%= t("contests.columns.rank") %></th>
+        <th><%= t("contests.columns.handle") %></th>
+        <th><%= t("contests.columns.solved") %></th>
+        <th><%= t("contests.columns.penalty") %></th>
       </tr>
     </thead>
     <tbody>
@@ -32,5 +32,5 @@
 </div>
 
 <% if @rows.empty? %>
-  <p class="empty-state">No participants have registered yet.</p>
+  <p class="empty-state"><%= t("contests.no_participants") %></p>
 <% end %>

@@ -23,3 +23,14 @@ Problem.order(:id).limit(26).each_with_index do |problem, index|
 end
 
 puts "Seeded contest #{contest.title} (#{contest.contest_problems.count} problems)"
+
+[
+  { name: "ThetaRush Club", description: "Official community group for ThetaRush." },
+  { name: "Uni ICPC Team", description: "University ICPC practice squad." },
+  { name: "Night Owls", description: "Late-night problem solving circle." }
+].each do |attrs|
+  group = Group.find_or_initialize_by(name: attrs[:name])
+  group.description = attrs[:description]
+  group.save!
+  puts "Seeded group #{group.slug}"
+end

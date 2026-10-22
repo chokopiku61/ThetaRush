@@ -1,31 +1,239 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  nav:
+    main: "Main navigation"
+    menu: "Open menu"
+    home: "Home"
+    problems: "Problems"
+    contests: "Contests"
+    submissions: "Submissions"
+    favorites: "Favorites"
+    groups: "Groups"
+    profile: "Profile"
+    admin: "Admin"
+    ui_kit: "UI kit"
+    language: "Language"
+    log_in: "Log in"
+    log_out: "Log out"
+    register: "Register"
+    collapse: "Collapse menu"
+    expand: "Expand menu"
+
+  verdicts:
+    ac: "AC"
+    wa: "WA"
+    tle: "TLE"
+    mle: "MLE"
+    re: "RE"
+    ce: "CE"
+    ie: "IE"
+    queued: "Queued"
+    judging: "Judging"
+    running: "Judging"
+
+  home:
+    title: "ThetaRush"
+    tagline: "Master your skills with elite programming problems, weekly contests, and global ratings."
+    browse_problems: "Browse problems"
+    join_contests: "Join contests"
+    problems: "Problems"
+    contests: "Active contests"
+    users: "Rated users"
+
+  problems:
+    title: "Problems"
+    lede: "Practice catalog. Pick a problem and submit a solution."
+    search: "Search problems"
+    rating_min: "Min rating"
+    rating_max: "Max rating"
+    tags: "Tags"
+    all_tags: "All tags"
+    empty: "No problems yet. Run bin/rails db:seed to load sample problems."
+    not_found: "Problem not found."
+    not_in_contest: "This problem is not part of that contest."
+    columns:
+      title: "Title"
+      rating: "Rating"
+      tags: "Tags"
+      time: "Time"
+      memory: "Memory"
+      solved: "Solved"
+      favorite: "Favorite"
+    time_limit: "Time"
+    memory_limit: "Memory"
+    solved: "Solved"
+    submit: "Submit"
+    upload_file: "Upload file"
+    paste_source: "Paste source"
+    language: "Language"
+    all_submissions: "All submissions"
+    open_submission: "Open"
+    recent_submissions: "Recent submissions"
+    no_submissions_yet: "No submissions yet"
+    status: "Status"
+    sign_in_to_submit: "Sign in to submit a solution. Guests can still read the statement."
+    contest_closed: "Contest submissions are closed."
+    register_before_submit: "Register for %{title} before submitting."
+    back_to_catalog: "Back to catalog"
+    contest_problems: "Contest problems"
+    previous: "Previous"
+    next: "Next"
+
+  time:
+    ago: "%{time} ago"
+    compact:
+      now: "now"
+      minutes: "%{count}m"
+      hours: "%{count}h"
+      days: "%{count}d"
+
+  submissions:
+    title: "Submissions"
+    lede: "Your recent attempts."
+    sign_in: "Sign in to view your submissions."
+    empty: "No submissions yet."
+    queued: "Submission queued for judging."
+    create_failed: "Could not create submission."
+    not_found: "Submission not found."
+    problem_not_in_contest: "This problem is not part of the contest."
+    register_first: "Register for the contest before submitting."
+    contest_closed: "Contest submissions are closed."
+    filters:
+      verdict: "Verdict"
+      language: "Language"
+      problem: "Problem"
+      all: "All"
+    columns:
+      id: "ID"
+      problem: "Problem"
+      language: "Language"
+      verdict: "Verdict"
+      time: "Time"
+      memory: "Memory"
+      when: "When"
+    detail_title: "Submission #%{id}"
+    copy: "Copy"
+    copied: "Copied"
+    compile_output: "Compile output"
+    stderr: "Stderr"
+    stdout: "Stdout"
+    refresh: "Refresh"
+    back_to_problem: "Back to problem"
+    judging: "Judging in progress…"
+    finished: "Judging finished."
+    time: "Time"
+    memory: "Memory"
+    language: "Language"
+
+  contests:
+    title: "Contests"
+    lede: "Tournaments and daily sprints."
+    empty: "No contests are available yet."
+    not_found: "Contest not found."
+    registration_closed: "Registration is closed for this contest."
+    registered: "Registered for %{title}."
+    already_registered: "You are already registered."
+    finalized: "Contest finalized and ratings updated."
+    register: "Register"
+    enter: "Enter"
+    view_results: "View results"
+    scoreboard: "Scoreboard"
+    all: "All contests"
+    sign_in_to_register: "Sign in to register"
+    registered_badge: "Registered"
+    registration_closed_label: "Registration is closed."
+    finalize: "Finalize contest"
+    problems: "Problems"
+    tabs:
+      upcoming: "Upcoming"
+      running: "Running"
+      finished: "Finished"
+    status:
+      upcoming: "Upcoming"
+      running: "Running"
+      finished: "Finished"
+      finalized: "Finalized"
+    scoreboard_title: "Scoreboard"
+    scoreboard_lede: "%{title} · ICPC-style standings."
+    back_to_contest: "Back to contest"
+    no_participants: "No participants have registered yet."
+    columns:
+      rank: "#"
+      handle: "Handle"
+      solved: "Solved"
+      penalty: "Penalty"
+      letter: "#"
+      title: "Title"
+      rating: "Rating"
+
+  favorites:
+    title: "Favorites"
+    problems_tab: "Favorite problems"
+    contests_tab: "Favorite contests"
+    empty_problems: "No favorite problems yet."
+    empty_contests: "No favorite contests yet."
+    browse_problems: "Browse problems"
+    browse_contests: "Browse contests"
+    added: "Added to favorites."
+    removed: "Removed from favorites."
+    invalid: "Invalid favorite target."
+    not_found: "Record not found."
+    star: "Favorite"
+    unstar: "Unfavorite"
+
+  groups:
+    title: "Groups"
+    lede: "Teams and study circles."
+    create: "Create group"
+    name: "Name"
+    description: "Description"
+    join: "Join"
+    leave: "Leave"
+    members: "Members"
+    shared_contests: "Shared contests"
+    shared_problems: "Shared problems"
+    placeholder_activity: "Activity placeholders coming soon."
+    created: "Group created."
+    joined: "Joined the group."
+    left: "Left the group."
+    owner_cannot_leave: "Transfer ownership before leaving as the only owner."
+    not_found: "Group not found."
+    empty: "No groups yet. Create one to get started."
+    member_count:
+      one: "%{count} member"
+      other: "%{count} members"
+
+  profile:
+    title: "Profile"
+    lede: "Rating and recent competitive programming activity."
+    current_rating: "Current rating"
+    max_rating: "Max rating"
+    contests_played: "Contests played"
+    problems_solved: "Problems solved"
+    rating_history: "Rating history"
+    recent_submissions: "Recent submissions"
+    view_all: "View all"
+    no_history: "No rated contests yet."
+    no_submissions: "No submissions yet."
+    columns:
+      contest: "Contest"
+      rank: "Rank"
+      change: "Change"
+      rating: "Rating"
+      problem: "Problem"
+      language: "Language"
+      verdict: "Verdict"
+      when: "When"
+
+  auth:
+    log_in: "Log in"
+    register: "Register"
+    email: "Email"
+    password: "Password"
+    password_confirmation: "Password confirmation"
+    remember_me: "Remember me"
+    sign_up: "Sign up"
+    characters_minimum: "%{count} characters minimum"
+
+  common:
+    apply: "Apply"
+    clear: "Clear"

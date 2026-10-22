@@ -1,18 +1,17 @@
+﻿<% show_sidebar = !content_for?(:hide_sidebar) -%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= I18n.locale %>">
   <head>
     <title><%= content_for(:title) || "ThetaRush" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="ThetaRush">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="color-scheme" content="dark">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -22,19 +21,34 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= render "layouts/header" %>
-    <%= render "layouts/flash" %>
+  <body class="<%= content_for?(:body_class) ? yield(:body_class) : nil %>">
+    <% if show_sidebar %>
+      <%= tag.div data: { controller: "sidebar" } do %>
+        <button type="button" class="sidebar-toggle" data-sidebar-target="toggle" data-action="sidebar#toggle" aria-controls="app-sidebar" aria-expanded="false" aria-label="<%= t("nav.menu") %>">
+          <span class="sidebar-toggle__bar"></span>
+          <span class="sidebar-toggle__bar"></span>
+          <span class="sidebar-toggle__bar"></span>
+        </button>
+        <div class="sidebar-backdrop" data-sidebar-target="backdrop" data-action="click->sidebar#close" hidden></div>
 
-    <main class="site-main">
+        <div class="app-shell" data-sidebar-target="shell">
+          <%= render "layouts/sidebar" %>
+
+          <div class="app-content">
+            <%= render "layouts/flash" %>
+            <main class="site-main<%= " site-main--wide" if content_for?(:wide_main) %>">
+              <%= yield %>
+            </main>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <%= render "layouts/flash" %>
       <%= yield %>
-    </main>
-
-    <%= render "layouts/footer" %>
+    <% end %>
   </body>
 </html>

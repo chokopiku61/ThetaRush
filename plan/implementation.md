@@ -533,7 +533,7 @@ As a user, click through core functionality: browse problems, submit and get a v
 - Build a full CMS
 - Expose Administrate without any access check
 
-### [ ] Step 5.10 - Manual happy-path checklist
+### [x] Step 5.10 - Manual happy-path checklist
 
 **Goal:** Prove the milestone: full click-through of core functionality.
 
@@ -696,11 +696,11 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 | [x] | 18 | 5.3 Sidekiq skeleton | M5 |
 | [x] | 19 | 5.4 Judge0 + client | M5 |
 | [x] | 20 | 5.5 Submit + webhook | M5 |
-| [ ] | 21 | 5.6 Contests register/show | M5 |
-| [ ] | 22 | 5.7 Scoring + scoreboard | M5 |
+| [x] | 21 | 5.6 Contests register/show | M5 |
+| [x] | 22 | 5.7 Scoring + scoreboard | M5 |
 | [x] | 23 | 5.8 Finalize + ratings + profile | M5 |
 | [x] | 24 | 5.9 Administrate thin | M5 |
-| [ ] | 25 | 5.10 Manual checklist | M5 |
+| [x] | 25 | 5.10 Manual checklist | M5 |
 | [ ] | 26 | 6.1 Happy-path tests | M6 |
 | [ ] | 27 | 6.2 Branch tests | M6 |
 | [ ] | 28 | 6.3 Test docs | M6 |

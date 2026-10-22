@@ -1,55 +1,63 @@
-<% content_for :title, "Submission ##{@submission.id} - ThetaRush" %>
+<% content_for :title, "#{t("submissions.detail_title", id: @submission.id)} - ThetaRush" %>
 
 <section class="page-header">
-  <h1>Submission #<%= @submission.id %></h1>
+  <h1><%= t("submissions.detail_title", id: @submission.id) %></h1>
   <p class="page-lede">
+    <%= link_to @problem.title, problem_path(@problem) %>
+  </p>
+  <div class="cluster" style="margin-top: var(--space-3)">
+    <%= verdict_badge(@submission.status) %>
+    <% if @submission.time_ms.present? %>
+      <span class="page-meta"><%= t("submissions.time") %>: <%= @submission.time_ms %> ms</span>
+    <% end %>
+    <% if @submission.memory_kb.present? %>
+      <span class="page-meta"><%= t("submissions.memory") %>: <%= format_memory(@submission.memory_kb) %></span>
+    <% end %>
+    <span class="page-meta"><%= t("submissions.language") %>: <%= language_label(@submission.language) %></span>
+  </div>
+  <p class="page-meta" style="margin-top: var(--space-2)">
     <% if %w[queued judging].include?(@submission.status) %>
-      Judging in progress. Refresh this page for the verdict.
+      <%= t("submissions.judging") %>
     <% else %>
-      Judging finished.
+      <%= t("submissions.finished") %>
     <% end %>
   </p>
 </section>
 
-<div class="surface stack stack--tight">
-  <p>
-    Problem:
-    <%= link_to @problem.title, problem_path(@problem) %>
-  </p>
-  <p>Language: <strong><%= @submission.language %></strong></p>
-  <p>Status: <%= verdict_badge(@submission.status) %></p>
-  <% if @submission.time_ms.present? %>
-    <p>Time: <strong><%= @submission.time_ms %> ms</strong></p>
+<section class="code-panel" data-controller="clipboard" data-clipboard-copied-value="<%= t("submissions.copied") %>">
+  <button type="button" class="button button--sm code-panel__copy" data-clipboard-target="button" data-action="clipboard#copy">
+    <%= t("submissions.copy") %>
+  </button>
+  <pre data-clipboard-target="source"><%= @submission.source_code %></pre>
+</section>
+
+<div class="accordion" style="margin-top: var(--space-5)">
+  <% if @submission.compile_output.present? %>
+    <details open>
+      <summary><%= t("submissions.compile_output") %></summary>
+      <pre class="sample"><%= @submission.compile_output %></pre>
+    </details>
   <% end %>
-  <% if @submission.memory_kb.present? %>
-    <p>Memory: <strong><%= @submission.memory_kb %> KB</strong></p>
+
+  <% if @submission.stderr.present? %>
+    <details open>
+      <summary><%= t("submissions.stderr") %></summary>
+      <pre class="sample"><%= @submission.stderr %></pre>
+    </details>
   <% end %>
-  <p class="page-meta">Submitted at <%= l(@submission.submitted_at, format: :short) rescue @submission.submitted_at %></p>
+
+  <% if @submission.stdout.present? && @submission.status == "ac" %>
+    <details>
+      <summary><%= t("submissions.stdout") %></summary>
+      <pre class="sample"><%= @submission.stdout %></pre>
+    </details>
+  <% end %>
 </div>
 
-<% if @submission.compile_output.present? %>
-  <section class="surface" style="margin-top: var(--space-5)">
-    <h2>Compile output</h2>
-    <pre class="sample"><%= @submission.compile_output %></pre>
-  </section>
-<% end %>
-
-<% if @submission.stderr.present? %>
-  <section class="surface" style="margin-top: var(--space-5)">
-    <h2>Stderr</h2>
-    <pre class="sample"><%= @submission.stderr %></pre>
-  </section>
-<% end %>
-
-<% if @submission.stdout.present? && @submission.status == "ac" %>
-  <section class="surface" style="margin-top: var(--space-5)">
-    <h2>Stdout</h2>
-    <pre class="sample"><%= @submission.stdout %></pre>
-  </section>
-<% end %>
-
 <div class="cluster" style="margin-top: var(--space-5)">
-  <%= link_to "Refresh", submission_path(@submission), class: "button" %>
-  <%= link_to "Back to problem", problem_path(@problem), class: "button button--ghost" %>
-  <%= link_to "Problem catalog", problems_path, class: "button button--secondary" %>
+  <% if %w[queued judging].include?(@submission.status) %>
+    <%= link_to t("submissions.refresh"), submission_path(@submission), class: "button" %>
+  <% end %>
+  <%= link_to t("submissions.back_to_problem"), problem_path(@problem), class: "button button--ghost" %>
+  <%= link_to t("problems.all_submissions"), submissions_path, class: "button button--secondary" %>
 </div>

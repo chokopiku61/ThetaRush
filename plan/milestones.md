@@ -38,7 +38,7 @@ Format: a separate page where you can scroll through all kinds of buttons, forms
  
 As a user, I can click through the entire core functionality of your project. Validations for various error cases may be missing, some "branches" or part of the non-core functionality may be missing. For example, in a Moodle-like service with test creation and test taking, I want to see the ability to create the simplest possible test and take it from another account. But there may not yet be different question types, question commenting, or auto-grading.
  
-- [ ] User happy path is ready
+- [x] User happy path is ready
 ## 6. Integration tests
  
 **Deadline:** 26.10-30.10

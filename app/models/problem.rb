@@ -5,6 +5,7 @@ class Problem < ApplicationRecord
   has_many :contest_problems, dependent: :restrict_with_exception, inverse_of: :problem
   has_many :contests, through: :contest_problems
   has_many :submissions, dependent: :restrict_with_exception, inverse_of: :problem
+  has_many :favorites, as: :favoritable, dependent: :destroy
 
   validates :title, :slug, :statement, presence: true
   validates :slug, uniqueness: true, format: { with: /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/ }
