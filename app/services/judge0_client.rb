@@ -44,6 +44,38 @@ class Judge0Client
     end
   end
 
+  # Single interactive run (IDE / sample play). No expected_output, no webhook.
+  # Uses wait=true so the HTTP response includes the finished result.
+  def create_run(language:, source_code:, stdin:, time_limit_ms:, memory_limit_mb:)
+    language_id = language_id_for!(language)
+    cpu_seconds = [ time_limit_ms.to_f / 1000.0, 0.1 ].max
+    memory_kb = memory_limit_mb.to_i * 1024
+
+    payload = {
+      source_code: source_code.to_s,
+      language_id: language_id,
+      stdin: stdin.to_s,
+      cpu_time_limit: cpu_seconds,
+      wall_time_limit: cpu_seconds + 1,
+      memory_limit: memory_kb,
+      enable_per_process_and_thread_time_limit: true,
+      enable_per_process_and_thread_memory_limit: true
+    }
+
+    body = post_json("/submissions?base64_encoded=false&wait=true", payload)
+    status_id = body.is_a?(Hash) ? (body.dig("status", "id") || body["status_id"]) : nil
+    description = body.is_a?(Hash) ? body.dig("status", "description") : nil
+
+    {
+      status: self.class.map_status_id(status_id, status_description: description),
+      stdout: body.is_a?(Hash) ? body["stdout"] : nil,
+      stderr: body.is_a?(Hash) ? body["stderr"] : nil,
+      compile_output: body.is_a?(Hash) ? body["compile_output"] : nil,
+      time_ms: body.is_a?(Hash) && body["time"].present? ? (body["time"].to_f * 1000).round : nil,
+      memory_kb: body.is_a?(Hash) ? body["memory"].presence&.to_i : nil
+    }
+  end
+
   # Creates one Judge0 submission per test case. Returns an array of tokens.
   def create_batch(submission)
     problem = submission.problem

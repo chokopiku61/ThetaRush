@@ -1,8 +1,14 @@
-<% content_for :title, "#{t("submissions.title")} - ThetaRush" %>
+<% content_for :title, "#{@contest ? "#{@contest.title} · " : ""}#{t("submissions.title")} - ThetaRush" %>
 
 <section class="page-header">
-  <h1><%= t("submissions.title") %></h1>
-  <p class="page-lede"><%= t("submissions.lede") %></p>
+  <h1><%= @contest ? t("contests.strip.all_submissions") : t("submissions.title") %></h1>
+  <p class="page-lede">
+    <% if @contest %>
+      <%= link_to @contest.title, contest_path(@contest) %>
+    <% else %>
+      <%= t("submissions.lede") %>
+    <% end %>
+  </p>
 </section>
 
 <% if @guest %>
@@ -11,7 +17,7 @@
   </div>
 <% else %>
 <%= form_with url: submissions_path, method: :get, local: true, class: "filters" do %>
-
+  <%= hidden_field_tag :contest_id, @contest.id if @contest %>
   <%= select_tag :verdict,
         options_for_select([[t("submissions.filters.all"), ""]] + Submission::STATUSES.map { |s| [s.upcase, s] }, params[:verdict]),
         class: "select" %>
@@ -23,7 +29,7 @@
         include_blank: t("submissions.filters.problem"),
         class: "select" %>
   <%= submit_tag t("common.apply"), class: "button button--sm" %>
-  <%= link_to t("common.clear"), submissions_path, class: "button button--ghost button--sm" %>
+  <%= link_to t("common.clear"), (@contest ? submissions_path(contest_id: @contest.id) : submissions_path), class: "button button--ghost button--sm" %>
 <% end %>
 
 <% if @submissions.empty? %>
@@ -34,6 +40,7 @@
       <thead>
         <tr>
           <th><%= t("submissions.columns.id") %></th>
+          <% if @contest %><th><%= t("contests.columns.handle") %></th><% end %>
           <th><%= t("submissions.columns.problem") %></th>
           <th><%= t("submissions.columns.language") %></th>
           <th><%= t("submissions.columns.verdict") %></th>
@@ -46,7 +53,11 @@
         <% @submissions.each do |submission| %>
           <tr>
             <td class="num"><%= link_to submission.id, submission_path(submission) %></td>
-            <td><%= link_to submission.problem.title, problem_path(submission.problem) %></td>
+            <% if @contest %><td><%= submission.user.username %></td><% end %>
+            <td>
+              <%= link_to submission.problem.title,
+                    problem_path(submission.problem, (@contest ? { contest_id: @contest.id } : {})) %>
+            </td>
             <td><%= language_label(submission.language) %></td>
             <td><%= verdict_badge(submission.status) %></td>
             <td class="num"><%= submission.time_ms.present? ? "#{submission.time_ms} ms" : "-" %></td>

@@ -65,6 +65,7 @@ class ProblemsController < ApplicationController
 
     @contest_accepting_submissions =
       @contest.status == "running" && Time.current.between?(@contest.starts_at, @contest.ends_at)
+    @contest_problem_statuses = helpers.contest_problem_status_map(@contest, current_user)
   end
 
   def recent_submissions_for(problem, contest)

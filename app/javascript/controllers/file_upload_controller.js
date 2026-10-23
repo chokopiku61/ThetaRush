@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Loads a local source file into the code textarea.
+// Loads a local source file into the Monaco editor (or textarea fallback).
 export default class extends Controller {
   static targets = ["input", "textarea", "language"]
   static values = { maxBytes: { type: Number, default: 262144 } }
@@ -19,7 +19,7 @@ export default class extends Controller {
   }
 
   load() {
-    if (!this.hasInputTarget || !this.hasTextareaTarget) return
+    if (!this.hasInputTarget) return
 
     const file = this.inputTarget.files[0]
     if (!file) return
@@ -32,8 +32,14 @@ export default class extends Controller {
 
     const reader = new FileReader()
     reader.onload = () => {
-      this.textareaTarget.value = String(reader.result)
-      this.textareaTarget.dispatchEvent(new Event("input", { bubbles: true }))
+      const text = String(reader.result)
+      const editor = this.editorController()
+      if (editor) {
+        editor.setValue(text)
+      } else if (this.hasTextareaTarget) {
+        this.textareaTarget.value = text
+        this.textareaTarget.dispatchEvent(new Event("input", { bubbles: true }))
+      }
       this.selectLanguage(file.name)
       this.inputTarget.value = ""
     }
@@ -50,6 +56,14 @@ export default class extends Controller {
     const language = this.constructor.EXTENSIONS[ext]
     if (language && Array.from(select.options).some((o) => o.value === language)) {
       select.value = language
+      select.dispatchEvent(new Event("change", { bubbles: true }))
+      const editor = this.editorController()
+      if (editor) editor.setLanguage(language)
     }
+  }
+
+  editorController() {
+    const el = this.element.closest("[data-controller~='editor']") || this.element
+    return this.application.getControllerForElementAndIdentifier(el, "editor")
   }
 }

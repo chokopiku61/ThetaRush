@@ -1,0 +1,145 @@
+<%# locals: problem, languages, default_source, can_submit, recent_submissions %>
+<div class="workspace__toolbar">
+  <div class="workspace__toolbar-left">
+    <label class="visually-hidden" for="submission_language"><%= t("problems.language") %></label>
+    <%= select_tag :language,
+          options_for_select(languages, "python"),
+          id: "submission_language",
+          class: "select",
+          style: "width:auto;min-width:8rem",
+          data: { editor_target: "language", file_upload_target: "language" } %>
+
+    <button type="button" class="button button--ghost button--sm" data-action="file-upload#pick"><%= t("problems.upload_file") %></button>
+    <input type="file" accept=".py,.cpp,.cc,.cxx,.c,.txt" data-file-upload-target="input" data-action="change->file-upload#load" hidden>
+  </div>
+
+  <div class="workspace__toolbar-right">
+    <div class="editor-mode editor-mode--switch" role="group" aria-label="<%= t("editor.vim") %>">
+      <span class="editor-mode__side" id="editor-mode-classic"><%= t("editor.classic") %></span>
+      <label class="editor-switch">
+        <input
+          type="checkbox"
+          class="editor-switch__input"
+          role="switch"
+          aria-checked="false"
+          aria-labelledby="editor-mode-classic editor-mode-vim"
+          data-editor-target="vimToggle"
+          data-action="change->editor#toggleVim">
+        <span class="editor-switch__track" aria-hidden="true">
+          <span class="editor-switch__thumb"></span>
+        </span>
+      </label>
+      <span class="editor-mode__side" id="editor-mode-vim"><%= t("editor.vim") %></span>
+    </div>
+
+    <span class="editor-mode editor-mode--caps" data-editor-target="capsRow" hidden>
+      <label class="editor-mode">
+        <input type="checkbox" data-editor-target="capsToggle" data-action="change->editor#toggleCaps">
+        <span><%= t("editor.swap_caps_esc") %></span>
+      </label>
+      <span class="editor-mode__help"><%= t("editor.swap_caps_esc_help") %></span>
+    </span>
+
+    <span class="editor-vim-status" data-editor-target="vimStatus" aria-live="polite"></span>
+  </div>
+</div>
+
+<div
+  class="workspace__editor-stack"
+  data-controller="split-pane"
+  data-split-pane-orientation-value="vertical"
+  data-split-pane-storage-key-value="thetarush:split-editor-top"
+  data-split-pane-min-value="35"
+  data-split-pane-max-value="80"
+  style="--split-top: 58%"
+>
+  <div class="workspace__editor-body" data-split-pane-target="left">
+    <div class="monaco-host" data-editor-target="host"></div>
+    <%= text_area_tag :source_code,
+          default_source,
+          id: "submission_source_code",
+          class: "visually-hidden",
+          rows: 18,
+          data: { editor_target: "input", file_upload_target: "textarea" },
+          spellcheck: false,
+          autocomplete: "off",
+          autocorrect: "off",
+          autocapitalize: "off" %>
+  </div>
+
+  <div
+    class="workspace__divider workspace__divider--horizontal"
+    data-split-pane-target="divider"
+    data-action="pointerdown->split-pane#start"
+    role="separator"
+    aria-orientation="horizontal"
+    tabindex="0"
+  ></div>
+
+  <div
+    class="workspace__editor-lower"
+    data-controller="split-pane"
+    data-split-pane-orientation-value="vertical"
+    data-split-pane-storage-key-value="thetarush:split-ide-top"
+    data-split-pane-min-value="30"
+    data-split-pane-max-value="75"
+    style="--split-top: 55%"
+  >
+    <div class="ide-panel" data-split-pane-target="left">
+      <div class="ide-panel__stdin">
+        <label class="ide-panel__label" for="custom_run_stdin"><%= t("editor.stdin") %></label>
+        <textarea
+          id="custom_run_stdin"
+          class="textarea textarea--code ide-panel__textarea"
+          rows="3"
+          data-custom-run-target="stdin"
+          spellcheck="false"
+        ></textarea>
+      </div>
+      <div class="ide-panel__actions">
+        <button
+          type="button"
+          class="button button--secondary button--sm"
+          data-custom-run-target="runButton"
+          data-action="custom-run#run"
+        ><%= t("editor.run") %></button>
+        <span class="ide-panel__status" data-custom-run-target="status"></span>
+      </div>
+      <div class="ide-panel__outputs">
+        <div>
+          <div class="ide-panel__label"><%= t("editor.stdout") %></div>
+          <pre class="ide-panel__out" data-custom-run-target="stdout"></pre>
+        </div>
+        <div>
+          <div class="ide-panel__label"><%= t("editor.stderr") %></div>
+          <pre class="ide-panel__out" data-custom-run-target="stderr"></pre>
+        </div>
+        <div>
+          <div class="ide-panel__label"><%= t("editor.compile_output") %></div>
+          <pre class="ide-panel__out" data-custom-run-target="compile"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="workspace__divider workspace__divider--horizontal"
+      data-split-pane-target="divider"
+      data-action="pointerdown->split-pane#start"
+      role="separator"
+      aria-orientation="horizontal"
+      tabindex="0"
+    ></div>
+
+    <div class="workspace__status">
+      <div class="cluster workspace__status-actions">
+        <%= link_to t("problems.all_submissions"),
+              submissions_path(problem_id: problem.id),
+              class: "button button--ghost button--sm" %>
+        <% if can_submit %>
+          <%= submit_tag t("problems.submit"), class: "button button--submit" %>
+        <% end %>
+      </div>
+      <%= render "submissions/workspace_panel", submissions: recent_submissions %>
+    </div>
+  </div>
+</div>

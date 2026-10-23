@@ -87,3 +87,5 @@ ehthumbs.db
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+.tmp-monaco/

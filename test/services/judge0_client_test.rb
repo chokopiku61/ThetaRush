@@ -50,4 +50,40 @@ class Judge0ClientTest < ActiveSupport::TestCase
   test "maps memory limit description to mle" do
     assert_equal "mle", Judge0Client.map_status_id(12, status_description: "Memory Limit Exceeded")
   end
+
+  test "create_run posts single submission without expected_output" do
+    client = Judge0Client.new
+    captured = nil
+    client.define_singleton_method(:post_json) do |path, payload|
+      captured = { path: path, payload: payload }
+      {
+        "stdout" => "3\n",
+        "stderr" => nil,
+        "compile_output" => nil,
+        "time" => "0.01",
+        "memory" => 1024,
+        "status" => { "id" => 3, "description" => "Accepted" }
+      }
+    end
+
+    result = client.create_run(
+      language: "python",
+      source_code: "print(3)",
+      stdin: "1 2",
+      time_limit_ms: 1000,
+      memory_limit_mb: 256
+    )
+
+    assert_equal "/submissions?base64_encoded=false&wait=true", captured[:path]
+    assert_equal 71, captured[:payload][:language_id]
+    assert_equal "1 2", captured[:payload][:stdin]
+    assert_equal "print(3)", captured[:payload][:source_code]
+    refute captured[:payload].key?(:expected_output)
+    refute captured[:payload].key?(:callback_url)
+    assert_equal "ac", result[:status]
+    assert_equal "3\n", result[:stdout]
+    assert_equal 10, result[:time_ms]
+    assert_equal 1024, result[:memory_kb]
+  end
 end
+

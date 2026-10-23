@@ -4,16 +4,28 @@ class SubmissionsController < ApplicationController
   before_action :authenticate_user!, only: :create
 
   def index
+    @contest = Contest.find_by(id: params[:contest_id]) if params[:contest_id].present?
+
     unless user_signed_in?
       @guest = true
       return
     end
 
-    @submissions = current_user.submissions.includes(:problem).order(submitted_at: :desc)
+    @submissions =
+      if @contest
+        Submission.where(contest_id: @contest.id).includes(:problem, :user).order(submitted_at: :desc)
+      else
+        current_user.submissions.includes(:problem).order(submitted_at: :desc)
+      end
     @submissions = @submissions.where(status: params[:verdict]) if params[:verdict].present?
     @submissions = @submissions.where(language: params[:language]) if params[:language].present?
     @submissions = @submissions.where(problem_id: params[:problem_id]) if params[:problem_id].present?
-    @problems = Problem.where(id: current_user.submissions.select(:problem_id).distinct).order(:title)
+    @problems =
+      if @contest
+        @contest.problems.order(:title)
+      else
+        Problem.where(id: current_user.submissions.select(:problem_id).distinct).order(:title)
+      end
   end
 
 

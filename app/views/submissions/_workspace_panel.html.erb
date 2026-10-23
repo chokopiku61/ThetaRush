@@ -8,6 +8,8 @@
 <div
   id="submission-status"
   class="pkg-menu"
+  data-verdict="<%= latest&.status %>"
+  data-submission-id="<%= latest&.id %>"
   <% if polling %>
     data-controller="submission-status"
     data-submission-status-url-value="<%= status_submission_path(latest) %>"
@@ -19,7 +21,7 @@
   <% if latest %>
     <div class="pkg-menu__latest">
       <div class="pkg-menu__latest-main">
-        <%= verdict_badge(latest.status) %>
+        <%= verdict_badge(latest.status, latest: true) %>
         <span class="pkg-menu__ago" title="<%= latest.submitted_at %>"><%= compact_ago(latest.submitted_at) %></span>
         <span class="pkg-menu__meta">
           <% if latest.time_ms.present? %>

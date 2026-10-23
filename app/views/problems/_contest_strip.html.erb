@@ -1,0 +1,39 @@
+<%# locals: contest %>
+<%
+  countdown =
+    case contest.status
+    when "upcoming"
+      t("contests.strip.until_start", time: hms_remaining(contest.starts_at))
+    when "running"
+      t("contests.strip.until_end", time: hms_remaining(contest.ends_at))
+    else
+      t("contests.strip.finished")
+    end
+  target =
+    case contest.status
+    when "upcoming" then contest.starts_at
+    when "running" then contest.ends_at
+    else nil
+    end
+%>
+<nav class="contest-strip" aria-label="<%= contest.title %>"
+     <% if target %>
+       data-controller="contest-countdown"
+       data-contest-countdown-target-value="<%= target.iso8601 %>"
+       data-contest-countdown-mode-value="<%= contest.status %>"
+       data-contest-countdown-until-start-template-value="<%= t("contests.strip.until_start", time: "%{time}") %>"
+       data-contest-countdown-until-end-template-value="<%= t("contests.strip.until_end", time: "%{time}") %>"
+       data-contest-countdown-finished-value="<%= t("contests.strip.finished") %>"
+     <% end %>>
+  <div class="contest-strip__links">
+    <%= link_to t("contests.strip.leaderboard"), scoreboard_contest_path(contest), class: "contest-strip__link" %>
+    <%= link_to t("contests.strip.all_submissions"), submissions_path(contest_id: contest.id), class: "contest-strip__link" %>
+    <%= link_to t("contests.strip.status"), contest_path(contest), class: "contest-strip__link" %>
+    <%= link_to t("contests.strip.standing"), scoreboard_contest_path(contest), class: "contest-strip__link" %>
+  </div>
+  <div class="contest-strip__timeframe">
+    <span class="contest-strip__countdown" data-contest-countdown-target="label"><%= countdown %></span>
+    <span class="contest-strip__time-divider" aria-hidden="true"></span>
+    <%= link_to contest.title, contest_path(contest), class: "contest-strip__contest-btn" %>
+  </div>
+</nav>
