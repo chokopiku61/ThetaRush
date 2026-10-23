@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_010002) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_140100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -193,7 +193,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_010002) do
     t.integer "rating", default: 1500, null: false
     t.integer "max_rating", default: 1500, null: false
     t.boolean "admin", default: false, null: false
+    t.bigint "pinned_contest_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["pinned_contest_id"], name: "index_users_on_pinned_contest_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
@@ -213,4 +215,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_010002) do
   add_foreign_key "submissions", "problems"
   add_foreign_key "submissions", "users"
   add_foreign_key "test_cases", "problems"
+  add_foreign_key "users", "contests", column: "pinned_contest_id", on_delete: :nullify
 end

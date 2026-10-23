@@ -1,0 +1,6 @@
+<%= turbo_stream.replace "contest-pin-button" do %>
+  <%= render "shared/pin_button", contest: @contest %>
+<% end %>
+<%= turbo_stream.replace "sidebar-pin-slot" do %>
+  <%= render "layouts/sidebar_pin_slot" %>
+<% end %>

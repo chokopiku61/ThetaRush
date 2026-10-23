@@ -10,14 +10,13 @@ module ApplicationHelper
 
   # Sidebar entries in display order. `path` is a route helper name, `auth`
   # hides the entry from guests and `admin` limits it to admin users.
+  # Home is the logo; profile is the footer avatar.
   SIDEBAR_SECTIONS = [
-    { key: :home, path: :root_path, icon: "home" },
     { key: :problems, path: :problems_path, icon: "problems" },
     { key: :contests, path: :contests_path, icon: "contests" },
     { key: :submissions, path: :submissions_path, icon: "submissions" },
     { key: :favorites, path: :favorites_path, icon: "favorites" },
     { key: :groups, path: :groups_path, icon: "groups" },
-    { key: :profile, path: :profile_path, icon: "profile", auth: true },
     { key: :ui_kit, path: :ui_kit_path, icon: "ui_kit" },
     { key: :admin, path: :admin_root_path, icon: "admin", auth: true, admin: true }
   ].freeze
@@ -34,13 +33,39 @@ module ApplicationHelper
     "ui_kit" => "M4 6h6v6H4V6zM14 6h6v4h-6V6zM14 14h6v4h-6v-4zM4 14h6v4H4v-4z",
     "admin" => "M12 3l8 3.5v5.5c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6.5L12 3zM12 9v4M12 16h.01",
     "logout" => "M10 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4M15 15l4-3-4-3M19 12H10",
-    "login" => "M14 5h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4M9 15l-4-3 4-3M5 12h9"
+    "login" => "M14 5h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4M9 15l-4-3 4-3M5 12h9",
+    "pin" => "M15 4.5l-1.5 1.5L15 10v3l-3 1.5V20l-1.5-3L9 20v-5.5L6 13v-3l1.5-4L6 4.5 9 3l3 1.5L15 3l0 1.5z"
   }.freeze
 
-  def verdict_badge(verdict)
+  def verdict_badge(verdict, latest: false)
     key = verdict.to_s.downcase
     label = t("verdicts.#{key}", default: key.upcase)
-    content_tag(:span, label, class: "badge badge--#{key}")
+    attrs = { class: "badge badge--#{key}" }
+    attrs[:data] = { latest_verdict_badge: true } if latest
+    content_tag(:span, label, **attrs)
+  end
+
+  # Best result per problem for the current user in a contest.
+  # Returns { problem_id => :ac | :attempted }. Guests / nil user → {}.
+  def contest_problem_status_map(contest, user)
+    return {} if contest.blank? || user.blank?
+
+    rows = user.submissions.where(contest_id: contest.id).pluck(:problem_id, :status)
+    by_problem = Hash.new { |h, k| h[k] = [] }
+    rows.each { |problem_id, status| by_problem[problem_id] << status }
+
+    by_problem.each_with_object({}) do |(problem_id, statuses), map|
+      map[problem_id] = statuses.include?("ac") ? :ac : :attempted
+    end
+  end
+
+  def contest_problem_letter_class(status, active: false)
+    [
+      "contest-nav__letter",
+      (active ? "contest-nav__letter--active" : nil),
+      (status == :ac ? "contest-nav__letter--ac" : nil),
+      (status == :attempted ? "contest-nav__letter--attempted" : nil)
+    ].compact.join(" ")
   end
 
   def contest_status_label(status)
@@ -133,6 +158,66 @@ module ApplicationHelper
     return t("time.compact.hours", count: hours) if hours < 48
 
     t("time.compact.days", count: hours / 24)
+  end
+
+  # Compact remaining duration until a deadline (e.g. "48m", "2d").
+  def compact_remaining(deadline)
+    return nil if deadline.blank?
+
+    seconds = (deadline - Time.current).to_i
+    return t("time.compact.now") if seconds <= 0
+
+    minutes = (seconds / 60.0).ceil
+    return t("time.compact.minutes", count: minutes) if minutes < 60
+
+    hours = (minutes / 60.0).ceil
+    return t("time.compact.hours", count: hours) if hours < 48
+
+    t("time.compact.days", count: (hours / 24.0).ceil)
+  end
+
+  # Remaining time as HH:MM:SS for contest strip countdown.
+  def hms_remaining(deadline)
+    return nil if deadline.blank?
+
+    seconds = (deadline - Time.current).to_i
+    seconds = 0 if seconds.negative?
+    hours = seconds / 3600
+    minutes = (seconds % 3600) / 60
+    secs = seconds % 60
+    format("%02d:%02d:%02d", hours, minutes, secs)
+  end
+
+  def pinned_contest_for_sidebar
+    return nil unless user_signed_in?
+
+    current_user.pinned_contest
+  end
+
+  def pinned_contest_badge_label(contest)
+    return nil if contest.blank?
+
+    case contest.status
+    when "upcoming"
+      compact_remaining(contest.starts_at)
+    when "running"
+      compact_remaining(contest.ends_at)
+    else
+      nil
+    end
+  end
+
+  def pinned_contest_solved_total(contest)
+    return [ 0, 0 ] if contest.blank?
+
+    total = contest.contest_problems.size
+    solved =
+      if user_signed_in?
+        current_user.contest_participations.find_by(contest: contest)&.solved_count.to_i
+      else
+        0
+      end
+    [ solved, total ]
   end
 
   # Localized "13 minutes ago" / "13 минут назад" for tables.

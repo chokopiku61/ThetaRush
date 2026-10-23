@@ -25,6 +25,8 @@ class User < ApplicationRecord
            source: :favoritable,
            source_type: "Contest"
 
+  belongs_to :pinned_contest, class_name: "Contest", optional: true
+
   validates :username,
             presence: true,
             uniqueness: { case_sensitive: false },

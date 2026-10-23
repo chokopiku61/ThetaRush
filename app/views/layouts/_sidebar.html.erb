@@ -1,7 +1,9 @@
 ﻿<aside class="sidebar" id="app-sidebar" data-sidebar-target="panel" aria-label="<%= t("nav.main") %>">
-  <a class="sidebar__brand" href="<%= root_path %>" title="ThetaRush">
+  <a class="sidebar__brand" href="<%= root_path %>" title="ThetaRush" aria-label="ThetaRush">
     <%= image_tag "logo.png", alt: "ThetaRush", class: "sidebar__logo" %>
   </a>
+
+  <%= render "layouts/sidebar_pin_slot" %>
 
   <nav class="sidebar__nav">
     <% visible_sidebar_sections.each do |section| %>
@@ -24,10 +26,14 @@
     </div>
 
     <% if user_signed_in? %>
-      <div class="sidebar__user" title="<%= current_user.username %> (<%= current_user.rating %>)">
+      <%= link_to profile_path,
+            class: "sidebar__user",
+            title: "#{current_user.username} (#{current_user.rating})",
+            aria: { label: t("nav.profile") },
+            data: { sidebar_target: "link", action: "click->sidebar#close" } do %>
         <span class="sidebar__avatar" aria-hidden="true"><%= current_user.username.to_s.first.to_s.upcase %></span>
         <span class="sidebar__label"><%= current_user.username %></span>
-      </div>
+      <% end %>
       <%= button_to destroy_user_session_path,
             method: :delete,
             class: "sidebar__icon-btn sidebar__logout",

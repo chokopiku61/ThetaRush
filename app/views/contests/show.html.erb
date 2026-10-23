@@ -3,7 +3,10 @@
 <section class="page-header">
   <div class="cluster" style="justify-content: space-between">
     <h1 style="margin: 0"><%= @contest.title %></h1>
-    <%= render "shared/favorite_button", record: @contest, favorite: @favorite %>
+    <div class="contest-actions__icons">
+      <%= render "shared/pin_button", contest: @contest %>
+      <%= render "shared/favorite_button", record: @contest, favorite: @favorite %>
+    </div>
   </div>
   <p class="page-lede"><%= @contest.description %></p>
   <p class="page-meta">
@@ -43,9 +46,12 @@
         </tr>
       </thead>
       <tbody>
+        <% statuses = @contest_problem_statuses || {} %>
         <% @contest_problems.each do |entry| %>
           <tr>
-            <td class="num"><%= entry.letter %></td>
+            <td class="num">
+              <span class="<%= contest_problem_letter_class(statuses[entry.problem_id]) %>"><%= entry.letter %></span>
+            </td>
             <td><%= link_to entry.problem.title, problem_path(entry.problem, contest_id: @contest.id) %></td>
             <td><span class="<%= rating_pill_class(entry.problem.rating) %>"><%= entry.problem.rating %></span></td>
           </tr>

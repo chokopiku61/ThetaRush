@@ -1,13 +1,26 @@
 <%# locals: record %>
 <% if user_signed_in? %>
   <% favorite = local_assigns[:favorite] || current_user.favorites.find_by(favoritable: record) %>
-  <% if favorite %>
-    <%= button_to favorite_path(favorite), method: :delete, class: "star-btn star-btn--on", title: t("favorites.unstar"), aria: { label: t("favorites.unstar") } do %>
-      ★
+  <span class="contest-action-btn">
+    <% if favorite %>
+      <%= button_to favorite_path(favorite),
+            method: :delete,
+            class: "star-btn star-btn--on",
+            form_class: "contest-action-form",
+            title: t("favorites.unstar"),
+            aria: { label: t("favorites.unstar") } do %>
+        <%= sidebar_icon("favorites") %>
+      <% end %>
+    <% else %>
+      <%= button_to favorites_path,
+            method: :post,
+            params: { favoritable_type: record.class.name, favoritable_id: record.id },
+            class: "star-btn",
+            form_class: "contest-action-form",
+            title: t("favorites.star"),
+            aria: { label: t("favorites.star") } do %>
+        <%= sidebar_icon("favorites") %>
+      <% end %>
     <% end %>
-  <% else %>
-    <%= button_to favorites_path, method: :post, params: { favoritable_type: record.class.name, favoritable_id: record.id }, class: "star-btn", title: t("favorites.star"), aria: { label: t("favorites.star") } do %>
-      ☆
-    <% end %>
-  <% end %>
+  </span>
 <% end %>

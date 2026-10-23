@@ -1,0 +1,25 @@
+<%# locals: contest %>
+<div id="contest-pin-button" class="contest-action-btn">
+  <% if user_signed_in? %>
+    <% pinned = current_user.pinned_contest_id == contest.id %>
+    <% if pinned %>
+      <%= button_to pin_contest_path(contest),
+            method: :delete,
+            class: "pin-btn pin-btn--on",
+            form_class: "contest-action-form",
+            title: t("contests.pin.unpin"),
+            aria: { label: t("contests.pin.unpin") } do %>
+        <%= sidebar_icon("pin") %>
+      <% end %>
+    <% else %>
+      <%= button_to pin_contest_path(contest),
+            method: :post,
+            class: "pin-btn",
+            form_class: "contest-action-form",
+            title: t("contests.pin.pin"),
+            aria: { label: t("contests.pin.pin") } do %>
+        <%= sidebar_icon("pin") %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

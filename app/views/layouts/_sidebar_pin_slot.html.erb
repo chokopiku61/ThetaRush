@@ -1,0 +1,29 @@
+<%# Sidebar pinned-contest slot. Re-rendered via Turbo Stream on pin/unpin. %>
+<% pinned = pinned_contest_for_sidebar %>
+<% solved, total = pinned ? pinned_contest_solved_total(pinned) : [0, 0] %>
+<% badge = pinned ? pinned_contest_badge_label(pinned) : nil %>
+<div class="sidebar__pin-slot" id="sidebar-pin-slot">
+  <% if pinned %>
+    <% starts_label = (l(pinned.starts_at, format: :short) rescue pinned.starts_at.to_s) %>
+    <% ends_label = (l(pinned.ends_at, format: :short) rescue pinned.ends_at.to_s) %>
+    <%= link_to contest_path(pinned),
+          class: "sidebar__pin sidebar__pin--active",
+          data: { sidebar_target: "link", action: "click->sidebar#close" },
+          aria: { label: pinned.title } do %>
+      <span class="sidebar__pin-icon" aria-hidden="true"><%= sidebar_icon("contests") %></span>
+      <% if badge.present? %>
+        <span class="sidebar__pin-badge"><%= badge %></span>
+      <% end %>
+      <span class="sidebar__pin-tooltip" role="tooltip">
+        <strong><%= pinned.title %></strong>
+        <span><%= t("contests.pin.tooltip_solved", solved: solved, total: total) %></span>
+        <span><%= t("contests.pin.tooltip_starts", time: starts_label) %></span>
+        <span><%= t("contests.pin.tooltip_ends", time: ends_label) %></span>
+      </span>
+    <% end %>
+  <% else %>
+    <span class="sidebar__pin sidebar__pin--empty" title="<%= t("contests.pin.empty") %>" aria-label="<%= t("contests.pin.empty") %>">
+      <span class="sidebar__pin-icon" aria-hidden="true"><%= sidebar_icon("pin") %></span>
+    </span>
+  <% end %>
+</div>

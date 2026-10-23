@@ -31,6 +31,8 @@ class ContestsController < ApplicationController
     @contest_problems = @contest.contest_problems.includes(:problem)
     @participation = current_user&.contest_participations&.find_by(contest: @contest)
     @favorite = user_signed_in? ? current_user.favorites.find_by(favoritable: @contest) : nil
+    @pinned = user_signed_in? && current_user.pinned_contest_id == @contest.id
+    @contest_problem_statuses = helpers.contest_problem_status_map(@contest, current_user)
   end
 
   def scoreboard

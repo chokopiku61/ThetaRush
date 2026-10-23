@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   resources :problems, only: [ :index, :show ] do
     resources :submissions, only: [ :create ]
+    resources :custom_runs, only: [ :create ]
   end
   resources :submissions, only: [ :index, :show ] do
     member do
@@ -33,6 +34,8 @@ Rails.application.routes.draw do
       get :scoreboard
       post :register
       post :finalize
+      post :pin, to: "pinned_contests#create"
+      delete :pin, to: "pinned_contests#destroy"
     end
   end
 
