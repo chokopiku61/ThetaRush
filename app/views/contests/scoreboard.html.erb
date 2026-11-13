@@ -14,16 +14,23 @@
         data: { contest_id: @contest.id } %>
 <% end %>
 
-<div class="table-wrap">
-  <table class="table">
-    <thead>
-      <tr>
-        <th><%= t("contests.columns.rank") %></th>
-        <th><%= t("contests.columns.handle") %></th>
-        <th><%= t("contests.columns.solved") %></th>
-        <th><%= t("contests.columns.penalty") %></th>
-      </tr>
-    </thead>
-    <%= render "scoreboard_rows", rows: @rows %>
-  </table>
-</div>
+<p class="page-meta"><%= t("contests.scoreboard_updates") %></p>
+
+<%= turbo_frame_tag "scoreboard" do %>
+  <p class="page-meta">
+    <%= link_to t("contests.refresh_scoreboard"), scoreboard_contest_path(@contest), data: { turbo_frame: "scoreboard" } %>
+  </p>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%= t("contests.columns.rank") %></th>
+          <th><%= t("contests.columns.handle") %></th>
+          <th><%= t("contests.columns.solved") %></th>
+          <th><%= t("contests.columns.penalty") %></th>
+        </tr>
+      </thead>
+      <%= render "scoreboard_rows", rows: @rows %>
+    </table>
+  </div>
+<% end %>

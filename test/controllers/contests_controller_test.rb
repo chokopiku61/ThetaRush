@@ -92,6 +92,41 @@ class ContestsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "turbo-cable-stream-source[channel=?][data-contest-id=?]",
                   "ScoreboardChannel", @contest.id.to_s
+    assert_select "turbo-frame#scoreboard turbo-cable-stream-source", count: 0
+  end
+
+  test "manual frame refresh recovers current standings for guests and signed-in viewers" do
+    [ nil, users(:one) ].each do |viewer|
+      sign_in_as(viewer) if viewer
+      participation = ContestParticipation.find_or_create_by!(contest: @contest, user: users(:two))
+      participation.update!(solved_count: 0, penalty: 0, rank: 1)
+      get scoreboard_contest_path(@contest)
+      assert_response :success
+      assert_select "turbo-frame#scoreboard a[href=?][data-turbo-frame=scoreboard]",
+                    scoreboard_contest_path(@contest), text: I18n.t("contests.refresh_scoreboard")
+      assert_select "turbo-frame#scoreboard tbody tr td:nth-child(3)", text: "0"
+
+      participation.update!(solved_count: 1, penalty: 32, rank: 1)
+
+      get scoreboard_contest_path(@contest), headers: { "Turbo-Frame" => "scoreboard" }
+      assert_response :success
+      assert_select "turbo-frame#scoreboard tbody#scoreboard_rows tr" do
+        assert_select "td:nth-child(2)", text: users(:two).username
+        assert_select "td:nth-child(3)", text: "1"
+        assert_select "td:nth-child(4)", text: "32"
+      end
+      assert_select "turbo-frame#scoreboard turbo-cable-stream-source", count: 0
+    end
+  end
+
+  test "scoreboard explains automatic and manual updates in both locales" do
+    %i[en ru].each do |locale|
+      cookies[:locale] = locale.to_s
+      get scoreboard_contest_path(@contest)
+      assert_response :success
+      assert_select "p.page-meta", text: I18n.t("contests.scoreboard_updates", locale: locale)
+      assert_select "turbo-frame#scoreboard a", text: I18n.t("contests.refresh_scoreboard", locale: locale)
+    end
   end
 
   private

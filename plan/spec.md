@@ -183,6 +183,10 @@ Concrete risks to keep in mind in later milestones. Mitigations are planning not
 
 ---
 
+## Live scoreboard
+
+The contest scoreboard is the Milestone 7 live page, verified with two independent signed-in sessions and real Judge0 on 2026-11-13. Terminal verdict scoring updates signed-in viewers through ActionCable and Turbo Streams. Everyone, including guests, can refresh the scoreboard manually through its Turbo Frame, with ordinary page navigation when JavaScript is unavailable. Refresh after reconnecting, registration, or final recalculation; these last two actions do not broadcast. See README for the acceptance evidence.
+
 ## Milestone 1 checklist (spec deliverables)
 
 - [x] Project topic name and description

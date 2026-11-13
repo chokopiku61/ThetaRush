@@ -55,4 +55,4 @@ Use WebSockets. Action Cable on the server, on the client it depends on the chos
  
 Example pages: a leaderboard that updates in real time; a page with comments loaded without refreshing the page; a chat with the owner of a booking; a likes counter.
  
-- [ ] Page with live data updates is ready
+- [x] Page with live data updates is ready

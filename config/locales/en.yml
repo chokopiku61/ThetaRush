@@ -154,6 +154,8 @@ en:
       finalized: "Finalized"
     scoreboard_title: "Scoreboard"
     scoreboard_lede: "%{title} · ICPC-style standings."
+    scoreboard_updates: "Signed-in viewers receive automatic updates after judged submissions. Everyone can refresh manually, including guests. Refresh after reconnecting, new registrations, or final recalculation."
+    refresh_scoreboard: "Refresh scoreboard"
     back_to_contest: "Back to contest"
     no_participants: "No participants have registered yet."
     columns:

@@ -668,7 +668,11 @@ Verification (2026-11-13): The full Rails suite passes with 85 tests and 660 ass
 - Poll Judge0 from the browser
 - Bypass Sidekiq/Judge0 for fake "live" hacks in production code paths
 
-### [ ] Step 7.3 - Live scoreboard acceptance check
+### [x] Step 7.3 - Live scoreboard acceptance check
+
+Implemented a scoreboard Turbo Frame with a manual refresh link, leaving the authenticated Cable subscription outside the frame. Added EN/RU copy explaining automatic verdict updates and manual refresh for guests, reconnection, registration, and final recalculation. Broadcast scope is unchanged.
+
+Verification (2026-11-13): Two independent signed-in browser sessions passed acceptance against Rails, Sidekiq, Solid Cable, and real Judge0. Python WA #46 followed by AC #47 updated the other session without reload, with 31 penalty minutes (11 elapsed + 20 for WA) and correct ranks. C++ AC #48 produced 13 penalty minutes and reordered the ranks. Contest 3 remained isolated. Stopping a dedicated second Rails process during #48 created a missed update; restarting it reconnected Cable but left stale rows, and frame refresh recovered the current standings with exactly one subscription retained. Guest EN/RU access and manual refresh, plus signed-in keyboard refresh, passed. Final full suite: 87 tests, 701 assertions, zero failures/errors/skips. RuboCop for the changed Ruby test and `git diff --check` passed. README contains the detailed acceptance record and the narrow-screen layout limitation reserved for later frontend work. M7 is complete; N1 and frontend simplification were not started.
 
 **Goal:** Confirm the milestone page is demo-ready.
 
@@ -722,6 +726,6 @@ Verification (2026-11-13): The full Rails suite passes with 85 tests and 660 ass
 | [x] | 28 | 6.3 Test docs | M6 |
 | [x] | 29 | 7.1 Scoreboard channel | M7 |
 | [x] | 30 | 7.2 Turbo Stream broadcast | M7 |
-| [ ] | 31 | 7.3 Live acceptance | M7 |
+| [x] | 31 | 7.3 Live acceptance | M7 |
 
 When unsure, prefer stopping at step boundaries over combining Judge0 with schema work or ActionCable with first auth.

@@ -1,6 +1,6 @@
 # Complete ThetaRush milestones and simplify frontend implementation
 
-Status: approved direction saved from the planning chat on 2026-11-13. M1-M6 and M7.1-M7.2 are recorded as complete in implementation.md. Implementation of this follow-on plan has not started.
+Status: approved direction saved from the planning chat on 2026-11-13. M1-M6 and M7.1-M7.3 are complete. Step 7.3 passed browser acceptance on 2026-11-13. N1 and all later steps remain unstarted.
 
 ## How to execute
 
@@ -23,7 +23,7 @@ Complete M7.3 first, then add nickname management and reduce custom JavaScript w
 
 ## 1. Finish the remaining milestone
 
-### [ ] Step 7.3: Live scoreboard acceptance
+### [x] Step 7.3: Live scoreboard acceptance
 
 - Add a Turbo Frame and refresh link around the scoreboard, keeping the subscription outside the frame.
 - Add EN/RU copy describing authenticated automatic updates and public manual refresh.
@@ -31,6 +31,8 @@ Complete M7.3 first, then add nickname management and reduce custom JavaScript w
 - Exercise WA followed by AC, correct penalty and ranks, isolation between contests, guest access, and refresh after a missed update during disconnection.
 - Preserve the current broadcast scope: verdict scoring broadcasts; registration and final recalculation require refresh.
 - Record actual results in README and the implementation plan. Mark M7 complete only after browser acceptance succeeds.
+
+Verification (2026-11-13): Added the scoreboard Turbo Frame and manual refresh link with the signed-in subscription outside it, plus EN/RU guidance. Two independent signed-in browser sessions exercised real Rails, Sidekiq, Solid Cable, and Judge0 using dedicated contests 2 and 3. Python submissions #46 (WA) and #47 (AC) updated the observing session live, yielding 1 solve and 31 penalty (11 elapsed + 20 wrong-attempt minutes). C++ AC #48 moved the other user to rank 1 with 13 penalty; the isolated contest stayed unchanged. A temporary second Rails process was stopped during #48, then restarted: the disconnected page remained stale after reconnect and the refresh link recovered the correct rows while retaining one subscription. Guest refresh, EN/RU rendering, and keyboard refresh also passed. Full suite: 87 tests, 701 assertions, zero failures/errors/skips. Focused Ruby lint and `git diff --check` passed. Detailed evidence and retained local acceptance data are recorded in README. The temporary server was stopped and original services/uncommitted work preserved. A narrow-screen sidebar overlap observed during layout spot checks remains for later frontend work; broad frontend acceptance is not claimed here. Stopped at the 7.3 boundary.
 
 ## 2. Add nickname selection and editing
 
