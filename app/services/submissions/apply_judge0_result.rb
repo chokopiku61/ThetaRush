@@ -30,14 +30,19 @@ module Submissions
         memory_kb: aggregate[:memory_kb]
       }
 
-      # Do not overwrite a finished verdict with judging from a late callback race.
-      if aggregate[:status] == "judging" && Submission::STATUSES.include?(@submission.status) &&
-         !%w[queued judging].include?(@submission.status)
-        return @submission
-      end
+      Submission.transaction do |transaction|
+        contest = @submission.contest
+        contest&.lock!
+        @submission.lock!
 
-      @submission.update!(attrs.compact)
-      apply_contest_scoring if terminal_status?(@submission.status)
+        # Reload under the locks before checking a late callback's pending result.
+        next if aggregate[:status] == "judging" && terminal_status?(@submission.status)
+
+        @submission.update!(attrs.compact)
+        if contest && terminal_status?(@submission.status) && Contests::Scoring.apply!(@submission)
+          transaction.after_commit { Contests::ScoreboardBroadcaster.call(contest) }
+        end
+      end
       @submission
     end
 
@@ -54,10 +59,6 @@ module Submissions
 
     def terminal_status?(status)
       Submission::STATUSES.include?(status) && !%w[queued judging].include?(status)
-    end
-
-    def apply_contest_scoring
-      Contests::Scoring.apply!(@submission) if @submission.contest_id?
     end
   end
 end

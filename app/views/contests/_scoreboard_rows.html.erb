@@ -1,0 +1,15 @@
+<tbody id="scoreboard_rows">
+  <% if rows.empty? %>
+    <tr>
+      <td colspan="4" class="empty-state"><%= t("contests.no_participants") %></td>
+    </tr>
+  <% end %>
+  <% rows.each do |row| %>
+    <tr>
+      <td class="num"><%= row.rank || "-" %></td>
+      <td><%= row.user.username %></td>
+      <td class="num"><%= row.solved_count %></td>
+      <td class="num"><%= row.penalty %></td>
+    </tr>
+  <% end %>
+</tbody>

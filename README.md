@@ -57,6 +57,22 @@ bin/rails db:seed
 bin/rails import:problems
 ```
 
+## Tests
+
+Run the full automated suite with:
+
+```bash
+bin/rails test
+```
+
+The test environment uses the `:test` Active Job adapter and PostgreSQL. It does not require Redis, Sidekiq, Docker Judge0, or network access to a judge. The submission judging integration tests replace the Judge0 HTTP transport with an in-process fake and still exercise the real job, result aggregation, persistence, and rendered responses. Run that flow alone with:
+
+```bash
+bin/rails test test/integration/submission_judging_flow_test.rb
+```
+
+For a real Judge0 end-to-end run, start PostgreSQL and Redis with `docker compose up -d`, start Rails and Sidekiq in separate terminals, then start Judge0 with `docker compose -f docker-compose.judge0.yml up -d`. Follow the manual happy path below. No contestant code is run on the Rails host.
+
 ## Manual happy path
 
 Walked through on a local stack: Postgres and Redis from `docker compose`, Judge0 from `docker-compose.judge0.yml`, Rails bound to `0.0.0.0`, and Sidekiq. `bin/rails db:seed` loads A + B, Hello Name, and a running "ThetaRush Demo Contest". Seeding again resets that contest to a new running window.

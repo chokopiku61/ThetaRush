@@ -3,6 +3,8 @@
 require "test_helper"
 
 class FinalizeContestJobTest < ActiveJob::TestCase
+  include ActionCable::TestHelper
+
   setup do
     @contest = Contest.create!(
       title: "Finished Cup",
@@ -32,8 +34,10 @@ class FinalizeContestJobTest < ActiveJob::TestCase
   end
 
   test "finalizes standings and persists rating changes once" do
-    assert_difference("RatingHistory.count", 2) do
-      FinalizeContestJob.perform_now(@contest.id)
+    assert_no_broadcasts("#{@contest.to_gid_param}:scoreboard") do
+      assert_difference("RatingHistory.count", 2) do
+        FinalizeContestJob.perform_now(@contest.id)
+      end
     end
 
     assert_equal "finalized", @contest.reload.status

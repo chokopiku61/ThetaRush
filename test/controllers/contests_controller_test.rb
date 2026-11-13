@@ -3,6 +3,8 @@
 require "test_helper"
 
 class ContestsControllerTest < ActionDispatch::IntegrationTest
+  include ActionCable::TestHelper
+
   setup do
     @contest = Contest.create!(
       title: "Controller Cup",
@@ -26,7 +28,7 @@ class ContestsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".contest-card__title", text: @contest.title
-    assert_select ".contest-card__meta", text: /1 problem/
+    assert_select ".contest-card__meta", text: /1 · 0/
 
     get contest_path(@contest)
 
@@ -37,8 +39,10 @@ class ContestsControllerTest < ActionDispatch::IntegrationTest
   test "signed-in user registers once" do
     sign_in_as(users(:one))
 
-    assert_difference("ContestParticipation.count", 1) do
-      post register_contest_path(@contest)
+    assert_no_broadcasts("#{@contest.to_gid_param}:scoreboard") do
+      assert_difference("ContestParticipation.count", 1) do
+        post register_contest_path(@contest)
+      end
     end
     assert_redirected_to contest_path(@contest)
 
@@ -74,6 +78,20 @@ class ContestsControllerTest < ActionDispatch::IntegrationTest
     assert_select "tbody tr", count: 2
     assert_select "tbody tr:first-child td:nth-child(2)", text: users(:two).username
     assert_select "tbody tr:first-child td:nth-child(3)", text: "1"
+  end
+
+  test "scoreboard stays public and only signed-in pages render a live subscription" do
+    get scoreboard_contest_path(@contest)
+    assert_response :success
+    assert_select "turbo-cable-stream-source", count: 0
+    assert_select "tbody#scoreboard_rows td[colspan='4']", text: I18n.t("contests.no_participants")
+    assert_select "p.empty-state", count: 0
+
+    sign_in_as(users(:one))
+    get scoreboard_contest_path(@contest)
+    assert_response :success
+    assert_select "turbo-cable-stream-source[channel=?][data-contest-id=?]",
+                  "ScoreboardChannel", @contest.id.to_s
   end
 
   private

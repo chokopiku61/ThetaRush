@@ -108,7 +108,7 @@ Aligned with [architecture.md](architecture.md). Nothing below is installed yet;
 | Navigation / partial updates | Hotwire **Turbo** (Drive, Frames; Streams from M7 for live scoreboard) |
 | Light client behavior | Hotwire **Stimulus** controllers |
 | Styling | Custom CSS with CSS variables and shared tokens (approach finalized in M3 UI kit; not a SPA CSS framework) |
-| Live updates (M7) | ActionCable + Turbo Streams on the contest scoreboard |
+| Live updates (M7) | ActionCable + Turbo Streams on the contest scoreboard, using Solid Cable with PostgreSQL; live subscriptions require sign-in while HTTP scoreboard access stays public |
 
 No separate SPA framework (React/Vue/etc.). The browser speaks HTTP (and WebSocket for cable) to Rails.
 

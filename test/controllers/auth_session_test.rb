@@ -4,10 +4,9 @@ class AuthSessionTest < ActionDispatch::IntegrationTest
   test "guest sees register and log in chrome" do
     get root_path
     assert_response :success
-    assert_select ".site-nav", text: /Register/
-    assert_select ".site-nav", text: /Log in/
-    assert_select ".session-status--guest"
-    assert_select ".session-status--signed-in", count: 0
+    assert_select "a[href=?]", new_user_registration_path
+    assert_select "a[href=?]", new_user_session_path
+    assert_select ".sidebar__user", count: 0
   end
 
   test "guest is redirected from protected dashboard" do
@@ -30,12 +29,12 @@ class AuthSessionTest < ActionDispatch::IntegrationTest
     }
     assert_redirected_to root_path
     follow_redirect!
-    assert_select ".session-status--signed-in", text: /#{email}/
-    assert_select ".site-nav__user", text: email
+    user = User.find_by!(email: email)
+    assert_select ".sidebar__user", text: /#{user.username}/
 
     get root_path
     assert_response :success
-    assert_select ".session-status--signed-in", text: /#{email}/
+    assert_select ".sidebar__user", text: /#{user.username}/
 
     get dashboard_path
     assert_response :success
@@ -44,8 +43,8 @@ class AuthSessionTest < ActionDispatch::IntegrationTest
     delete destroy_user_session_path
     assert_redirected_to root_path
     follow_redirect!
-    assert_select ".session-status--guest"
-    assert_select ".site-nav", text: /Register/
+    assert_select "a[href=?]", new_user_registration_path
+    assert_select ".sidebar__user", count: 0
 
     get dashboard_path
     assert_redirected_to new_user_session_path
@@ -59,6 +58,6 @@ class AuthSessionTest < ActionDispatch::IntegrationTest
     }
     assert_redirected_to root_path
     follow_redirect!
-    assert_select ".session-status--signed-in", text: /#{user.email}/
+    assert_select ".sidebar__user", text: /#{user.username}/
   end
 end

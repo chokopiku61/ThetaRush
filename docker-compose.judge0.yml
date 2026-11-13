@@ -87,4 +87,5 @@ volumes:
 
 networks:
   judge0_net:
+    name: thetarush_judge0_net
     driver: bridge

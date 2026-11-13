@@ -21,12 +21,17 @@ default: &default
 
 
 development:
-  <<: *default
-  database: theta_rush_development
-  username: <%= ENV.fetch("PGUSER", "postgres") %>
-  password: <%= ENV.fetch("PGPASSWORD", "postgres") %>
-  host: <%= ENV.fetch("PGHOST", "localhost") %>
-  port: <%= ENV.fetch("PGPORT", "5433") %>
+  primary: &primary_development
+    <<: *default
+    database: theta_rush_development
+    username: <%= ENV.fetch("PGUSER", "postgres") %>
+    password: <%= ENV.fetch("PGPASSWORD", "postgres") %>
+    host: <%= ENV.fetch("PGHOST", "localhost") %>
+    port: <%= ENV.fetch("PGPORT", "5433") %>
+  cable:
+    <<: *primary_development
+    database: theta_rush_development_cable
+    migrations_paths: db/cable_migrate
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

@@ -2,6 +2,8 @@
 
 Session-sized playbook for building ThetaRush. Source of truth: [architecture.md](architecture.md), [milestones.md](milestones.md), [AGENTS.md](../AGENTS.md).
 
+UI maintenance proposal: [UI refactoring plan](ui_refactoring.md). Complete M6 before its implementation; follow the existing M7 sequence before adding submission broadcasts.
+
 ## How to use this plan
 
 1. Work milestones **strictly in order** (M1 then M2, and so on). Do not skip ahead.
@@ -558,7 +560,13 @@ As a user, click through core functionality: browse problems, submit and get a v
 
 Detailed tests for the happy path plus 2-3 branches. Prefer stubbing Judge0 HTTP in CI; document Docker for real judge locally.
 
-### [ ] Step 6.1 - Happy-path integration / system tests
+### [x] Step 6.1 - Happy-path integration / system tests
+
+Progress (2026-11-13): Added `test/integration/submission_judging_flow_test.rb` for practice Python/C++ submissions through the real job and result aggregation, plus contest WA -> AC callbacks, duplicate callback handling, and refreshed scoreboard ranks/penalty. The fake replaces Judge0 transport only; batch payloads, limits, stored results, and rendered responses are asserted. Existing controller tests already cover contest submission/enqueue and auto-participation; service tests cover aggregation/scoring separately.
+
+The original Solid Cache boot failure was reproduced with and without Bootsnap. In this environment, `Dir.glob` returns no matches under the installed `.local` gem path even when direct reads succeed, so Zeitwerk misses Solid Cache's ignored directories. Installing the locked dependencies locally in ignored `vendor/bundle` from cached gem packages gets Rails past that failure without changing application code or system gems. Local Bundler settings use `path=vendor/bundle` and `bin=.bundle/bin`; installation also required process-local `BUNDLE_USER_HOME` and `BUNDLE_SYSTEM_BINDIR` under the project. Dependency versions and the lockfile are unchanged.
+
+Verification (2026-11-13): Started the project's PostgreSQL and Redis containers. The focused judging flow passes with 6 tests and 220 assertions. The full suite passes with 67 tests and 565 assertions, without starting Judge0 or Sidekiq.
 
 **Goal:** Automated coverage of the core flow: submit to verdict; contest score update.
 
@@ -575,7 +583,7 @@ Detailed tests for the happy path plus 2-3 branches. Prefer stubbing Judge0 HTTP
 - Depend on real Judge0 in default test rake task
 - Delete model unit tests from M4
 
-### [ ] Step 6.2 - Branch tests (2-3 off happy path)
+### [x] Step 6.2 - Branch tests (2-3 off happy path)
 
 **Goal:** Cover failure/authorization branches.
 
@@ -594,7 +602,7 @@ Detailed tests for the happy path plus 2-3 branches. Prefer stubbing Judge0 HTTP
 - Exhaustively test every Devise edge case
 - Add live WebSocket expectations (M7)
 
-### [ ] Step 6.3 - CI notes and Judge0 stub documentation
+### [x] Step 6.3 - CI notes and Judge0 stub documentation
 
 **Goal:** Document how tests stub Judge0 and how to run a real end-to-end judge locally.
 
@@ -610,6 +618,8 @@ Detailed tests for the happy path plus 2-3 branches. Prefer stubbing Judge0 HTTP
 - Commit credentials
 - Weaken sandbox "so CI passes"
 
+Completed (2026-11-13): README now documents the hermetic test command, the Judge0 transport fake, required local services, and the separate manual Judge0 end-to-end setup.
+
 **Milestone 6 done when:** happy path + 2-3 branches are automated and documented.
 
 ---
@@ -618,7 +628,9 @@ Detailed tests for the happy path plus 2-3 branches. Prefer stubbing Judge0 HTTP
 
 WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest scoreboard.
 
-### [ ] Step 7.1 - ActionCable channel for contest scoreboard
+### [x] Step 7.1 - ActionCable channel for contest scoreboard
+
+Completed (2026-11-13): Development and production use Solid Cable backed by the existing PostgreSQL server, so web and Sidekiq processes share broadcasts without a process-local async adapter. WebSocket connections require a signed-in Devise user; guests can still read the public HTTP scoreboard, while signed-in users can subscribe whether or not they registered for the contest. Channel and controller tests pass, and `db:prepare` created the development cable database from the existing cable schema.
 
 **Goal:** Subscribe clients to a contest scoreboard stream.
 
@@ -635,7 +647,11 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 - Redesign scoring algorithms
 - Add chat or unrelated cable features
 
-### [ ] Step 7.2 - Broadcast on score updates (Turbo Streams)
+### [x] Step 7.2 - Broadcast on score updates (Turbo Streams)
+
+Completed (2026-11-13): Terminal contest verdicts from both webhooks and the Sidekiq polling fallback now replace `scoreboard_rows` on the existing contest stream. Verdict persistence and scoring run in one transaction with contest and submission row locks; broadcasts run after commit. The shared table-body partial includes the empty state. Broadcast failures are logged without changing committed verdicts. Registration and final recalculation do not broadcast.
+
+Verification (2026-11-13): The full Rails suite passes with 85 tests and 660 assertions. Coverage includes stream isolation, replacement HTML and rank order, WA -> AC penalties, duplicate callbacks, stale pending callbacks, commit/rollback behavior, scoring and broadcast failures, guest rendering, and no broadcasts on registration/finalization. RuboCop passes for all six changed Ruby files. Two-browser acceptance against real Judge0 remains Step 7.3; it has not been performed in this session.
 
 **Goal:** When contest scoring updates standings, broadcast Turbo Stream replace/update for the scoreboard table.
 
@@ -701,11 +717,11 @@ WebSockets via ActionCable; Hotwire Turbo Streams / Turbo Frames for the contest
 | [x] | 23 | 5.8 Finalize + ratings + profile | M5 |
 | [x] | 24 | 5.9 Administrate thin | M5 |
 | [x] | 25 | 5.10 Manual checklist | M5 |
-| [ ] | 26 | 6.1 Happy-path tests | M6 |
-| [ ] | 27 | 6.2 Branch tests | M6 |
-| [ ] | 28 | 6.3 Test docs | M6 |
-| [ ] | 29 | 7.1 Scoreboard channel | M7 |
-| [ ] | 30 | 7.2 Turbo Stream broadcast | M7 |
+| [x] | 26 | 6.1 Happy-path tests | M6 |
+| [x] | 27 | 6.2 Branch tests | M6 |
+| [x] | 28 | 6.3 Test docs | M6 |
+| [x] | 29 | 7.1 Scoreboard channel | M7 |
+| [x] | 30 | 7.2 Turbo Stream broadcast | M7 |
 | [ ] | 31 | 7.3 Live acceptance | M7 |
 
 When unsure, prefer stopping at step boundaries over combining Judge0 with schema work or ActionCable with first auth.

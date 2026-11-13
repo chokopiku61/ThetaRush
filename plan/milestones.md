@@ -45,8 +45,8 @@ As a user, I can click through the entire core functionality of your project. Va
  
 Detailed tests for the happy path + 2-3 branches off it (in the example above, a case could be: a user without edit permissions tries to edit a test -> we return an error).
  
-- [ ] Detailed tests for the happy path
-- [ ] Tests for 2-3 branches off the happy path
+- [x] Detailed tests for the happy path
+- [x] Tests for 2-3 branches off the happy path
 ## 7. Page with live (and partial) data updates
  
 **Deadline:** 02.11-06.11

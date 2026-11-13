@@ -14,7 +14,7 @@ flowchart TB
         CC["ContestsController: tournaments and registration"]
         PrC["ProfilesController: profile and rating"]
         Hook["Judge0WebhookController: receiving verdicts"]
-        Cable["ActionCable: live scoreboard"]
+    Cable["ActionCable: live scoreboard (Solid Cable)"]
         Admin["Admin panel: Administrate"]
     end
 
@@ -36,8 +36,8 @@ flowchart TB
     Cron["Scheduler: sidekiq-cron"]
 
     subgraph Data["Storage"]
-        PG[("PostgreSQL: users, problems, contests, submissions, rating_history")]
-        Redis[("Redis: job queue and ActionCable")]
+        PG[("PostgreSQL: app data and Solid Cable messages")]
+        Redis[("Redis: Sidekiq job queue")]
         Files[("Test files: ActiveStorage or disk")]
     end
 

@@ -23,7 +23,7 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     get profile_path
 
     assert_response :success
-    assert_select ".rating-block__value", text: "1520"
+    assert_select ".profile-header .rating-pill", text: /1520/
     assert_select "td", text: contest.title
     assert_select "td", text: "+20"
   end
