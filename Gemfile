@@ -26,7 +26,7 @@ gem "administrate"
 # Background jobs [https://github.com/sidekiq/sidekiq]
 # Sidekiq 7.3 is incompatible with connection_pool 3.x (Queue#pop arity).
 gem "sidekiq", "~> 7.3"
-gem "connection_pool", "~> 2.4"
+gem "connection_pool", "~> 3.0"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
